@@ -84,6 +84,10 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
   <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
 </div>
 <div id="content"></div>
+<div id="footer" style="padding:8px 14px;background:#fff;border-top:1px solid #e2e8f0;flex-shrink:0;text-align:center;display:none">
+  <div style="font-size:11px;font-weight:700;color:#1e293b">문멘토공인중개사사무소</div>
+  <div style="font-size:10px;color:#64748b;margin-top:2px">☎ 010.6336.1828 &nbsp;|&nbsp; 010.4336.5038</div>
+</div>
 <div id="error-page">
   <div style="font-size:48px">🔍</div>
   <div style="font-size:16px;font-weight:800;color:#1e293b">잘못된 링크예요</div>
@@ -184,6 +188,7 @@ if(!C){
   document.getElementById("haddr").textContent=C.addr;
   document.getElementById("hprice").textContent=`💵 ${C.price}`;
   document.getElementById("hbuyer").textContent=`👥 ${C.buyer}`;
+  document.getElementById("footer").style.display="block";
 
   const sb=supabase.createClient(SB_URL,SB_KEY);
   const LKEY=`chk_${clientKey}`;
