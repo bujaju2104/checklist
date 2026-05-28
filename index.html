@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#1e3a5f"/>
-<title>매매 체크리스트 | 서울숲한신더휴</title>
+<title>문멘토 매매 체크리스트</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -15,31 +14,31 @@ html,body{height:100%;-webkit-tap-highlight-color:transparent}
 body{font-family:'Noto Sans KR',sans-serif;background:#f8fafc;color:#1e293b;display:flex;flex-direction:column;max-width:430px;margin:0 auto;height:100dvh;overflow:hidden}
 button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;background:none}
 ::-webkit-scrollbar{width:0}
-#header{background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:12px 14px 10px;flex-shrink:0}
+#header{padding:12px 14px 10px;flex-shrink:0}
 .h-top{display:flex;gap:10px;align-items:center;margin-bottom:7px}
 .h-icon{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .h-name{font-size:14px;font-weight:800;color:#fff;line-height:1.2}
-.h-addr{font-size:10px;color:#bfdbfe;margin-top:2px}
+.h-addr{font-size:10px;color:rgba(255,255,255,.7);margin-top:2px}
 .h-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border-radius:20px;padding:2px 9px;font-size:10px}
 .sync-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.15);border-radius:20px;padding:2px 8px;font-size:10px;color:#86efac;cursor:pointer}
 .notif-bar{background:#f59e0b;color:#fff;font-size:11px;font-weight:700;padding:8px 14px;text-align:center;cursor:pointer;flex-shrink:0;display:none}
 #main-tabs{display:flex;background:#fff;border-bottom:2px solid #e2e8f0;flex-shrink:0}
 .mtab{flex:1;padding:7px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:10px;font-weight:500}
-.mtab.active{color:#2563eb;border-bottom-color:#2563eb;font-weight:700}
+.mtab.active{border-bottom-width:2px;font-weight:700}
 .mtab-icon{font-size:15px}
 #sub-tabs{display:flex;background:#f1f5f9;border-bottom:1px solid #e2e8f0;flex-shrink:0}
 .stab{flex:1;padding:6px 2px;font-size:10px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent}
-.stab.active{color:#7c3aed;border-bottom-color:#7c3aed;font-weight:700}
+.stab.active{font-weight:700}
 #progress{padding:7px 14px 6px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
 .prog-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:11px}
 .prog-bar{height:4px;background:#e2e8f0;border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:4px;transition:width .4s}
+.prog-fill{height:100%;border-radius:4px;transition:width .4s}
 #content{flex:1;overflow-y:auto;padding:10px 10px 20px;display:flex;flex-direction:column;gap:8px}
 .sec-label{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.04em;padding:0 3px 4px}
 .sec-bar{width:3px;height:10px;border-radius:2px;flex-shrink:0}
 .card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden}
-.item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background .15s}
+.item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-bottom:1px solid #f1f5f9;cursor:pointer}
 .item:last-child{border-bottom:none}
 .item.on{background:#f0fdf4}
 .cb{width:17px;height:17px;border-radius:4px;flex-shrink:0;border:2px solid #cbd5e1;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
@@ -54,125 +53,246 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 .badge{flex-shrink:0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;max-width:340px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 #toast.show{opacity:1}
+#error-page{display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px;text-align:center}
 </style>
 </head>
 <body>
+
 <div id="header">
   <div class="h-top">
-    <div class="h-icon">🏢</div>
+    <div class="h-icon" id="hicon">🏢</div>
     <div>
-      <div class="h-name">서울숲한신더휴</div>
-      <div class="h-addr">114동 403호 · 성동구 행당동 349 · 매수인</div>
+      <div class="h-name" id="hname"></div>
+      <div class="h-addr" id="haddr"></div>
     </div>
   </div>
   <div class="h-chips">
-    <div class="chip" style="color:#fef9c3">💵 18억 2,000만원</div>
-    <div class="chip" style="color:#e0e7ff">👥 정동수 · 김현경</div>
+    <div class="chip" id="hprice" style="color:#fef9c3"></div>
+    <div class="chip" id="hbuyer" style="color:#e0e7ff"></div>
     <div class="sync-badge" id="sbadge" onclick="reqNotif()">🔄 연결중...</div>
   </div>
 </div>
+
 <div class="notif-bar" id="nbar" onclick="reqNotif()">🔔 탭하면 알림을 받을 수 있어요!</div>
 <div id="main-tabs"></div>
 <div id="sub-tabs" style="display:none"></div>
 <div id="progress">
   <div class="prog-row">
     <span style="font-weight:700;color:#1e293b" id="plabel"></span>
-    <span style="font-weight:800;color:#2563eb" id="ppct">0%</span>
+    <span style="font-weight:800" id="ppct" style="color:#2563eb">0%</span>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
 </div>
 <div id="content"></div>
+<div id="error-page">
+  <div style="font-size:48px">🔍</div>
+  <div style="font-size:16px;font-weight:800;color:#1e293b">잘못된 링크예요</div>
+  <div style="font-size:13px;color:#64748b">올바른 링크로 다시 접속해주세요</div>
+</div>
 <div id="toast"></div>
+
 <script>
+// ══════════════════════════════
+// Supabase 설정
+// ══════════════════════════════
 const SB_URL = "https://bjmanwqmoeobkpxehfpm.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA";
-const TB="checklists", RID="jdk_v1";
-const sb=supabase.createClient(SB_URL,SB_KEY);
-const LKEY="chk_jdk";
+const TB = "checklists";
+// ══════════════════════════════
 
-const TABS=[{id:0,label:"가계약",icon:"🤝",date:"2026.04"},{id:1,label:"허가",icon:"📋",date:"2026.04"},{id:2,label:"계약",icon:"📝",date:"2026.05.08"},{id:3,label:"중도금",icon:"💰",date:"2026.06.22"},{id:4,label:"잔금",icon:"🏠",date:"2026.10.01"}];
-const SUB={2:["체결","거래신고","차용금","서류","미제출"],4:["납부","서류","물품","입주"]};
-const ST={done:{dot:"#16a34a",bg:"#dcfce7",txt:"#15803d",lbl:"완료"},pending:{dot:"#ea580c",bg:"#ffedd5",txt:"#c2410c",lbl:"보완중"},soon:{dot:"#2563eb",bg:"#dbeafe",txt:"#1d4ed8",lbl:"예정"},info:{dot:"#9ca3af",bg:"#f3f4f6",txt:"#6b7280",lbl:"참고"}};
-const TC={"정동수":{bg:"#dbeafe",txt:"#1d4ed8"},"김현경":{bg:"#ede9fe",txt:"#6d28d9"}};
-const PAGES={
-"0":[{title:"가계약 진행",ac:"#16a34a",items:[{id:"g1",text:"가계약금 납부",date:"2026.04",st:"done",note:"매도인(정상순·이숙희) 이체 완료"},{id:"g2",text:"약정서 작성 및 서명",date:"2026.04",st:"done",note:"매매 약정서 쌍방 서명 완료"}]}],
-"1":[{title:"토지거래계약 허가",ac:"#2563eb",items:[{id:"h1",text:"토지거래계약 허가신청",date:"2026.04.14",st:"done",note:"성동구청 접수"},{id:"h2",text:"토지거래계약 허가증 발급",date:"2026.04.24",st:"done",note:"허가증 수령 완료"}]}],
-"2-0":[{title:"계약 체결",ac:"#7c3aed",items:[{id:"c1",text:"부동산 매매 계약 체결",date:"2026.05.08",st:"done",note:"매매가 18억 2,000만원 확정"},{id:"c2",text:"계약금 납부 (1억 8,200만원)",date:"2026.05.08",st:"done"},{id:"c3",text:"잔금 영수증 미리 도장 받기",date:"2026.05.08",st:"done",note:"잔금일 영수증 사전 징구"}]}],
-"2-1":[{title:"🏛 부동산거래신고 — 계약 후 30일 이내",ac:"#0891b2",items:[{id:"rg1",text:"부동산거래신고 접수",date:"마감 2026.06.07",st:"soon",note:"계약일 2026.05.08 기준 30일 이내"},{id:"rg5",text:"부동산 임대차계약서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수 임대보증금 자금출처 증빙"},{id:"rg6",text:"금전소비대차계약서 제출",date:"계약 후 30일 이내",st:"soon",note:"김현경 시아버지 차용금 1억원 증빙",tag:"김현경"},{id:"rg3",text:"주택취득자금 조달 및 입주계획서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수·김현경 각각 제출"},{id:"rg4",text:"증빙서류 미제출 사유서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수·김현경 각각 제출"}]}],
-"2-2":[{title:"💸 금전소비대차계약",ac:"#d97706",items:[{id:"c5",text:"금전소비대차계약 체결",date:"2026.05.06",st:"done",note:"채권자 정운섭(시아버지) → 채무자 김현경",tag:"김현경"},{id:"c6",text:"차용금액 1억원 · 무이자 · 상환기한 4년",st:"done",note:"주택 매수자금 목적"},{id:"c7",text:"매월 25일 10만원 원금 상환",st:"soon",note:"통장 이체 기록 필수 — 누락 없이 유지"}]}],
-"2-3":[{title:"📎 계약일 필요서류 — 개인 매수인 각자",ac:"#0891b2",items:[{id:"cd1",text:"신분증 (정동수·김현경 각각)",st:"done"},{id:"cd2",text:"도장 또는 서명",st:"done"},{id:"cd3",text:"계약금",st:"done"}]},{title:"⚠️ 대리 계약시 추가 서류",ac:"#9ca3af",items:[{id:"ca1",text:"대리인 신분증",st:"info"},{id:"ca2",text:"위임장 (확인용)",st:"info"},{id:"ca3",text:"매수인 인감증명서 (최근 3개월 이내)",st:"info"}]}],
-"2-4":[{title:"📌 미제출 서류 보완 일정",ac:"#d97706",items:[{id:"cs1",text:"예금잔액증명서",date:"2026.07 목표",st:"pending",note:"퇴직금 중도인출 예정 (계약 후 2개월)",tag:"정동수"},{id:"cs2",text:"예금잔액증명서",date:"2026.09 목표",st:"pending",note:"퇴직금 신탁 해지 예정 (8월말 실행)",tag:"김현경"},{id:"cs3",text:"주식거래내역서",date:"잔금일 이전",st:"pending",note:"잔금일 이전 주식 매각 예정",tag:"정동수"},{id:"cs4",text:"주식거래내역서",date:"잔금일 이전",st:"pending",note:"잔금일 이전 주식 매각 예정",tag:"김현경"}]}],
-"3":[{title:"중도금 납부",ac:"#0891b2",items:[{id:"m1",text:"중도금 납부 (3억 1,800만원)",date:"2026.06.22",st:"soon"}]},{title:"📌 보완 서류 진행 현황",ac:"#d97706",items:[{id:"ms1",text:"예금잔액증명서 제출",date:"2026.07 목표",st:"pending",note:"퇴직금 중도인출 후 제출",tag:"정동수"},{id:"ms2",text:"예금잔액증명서 제출",date:"2026.09 목표",st:"pending",note:"퇴직금 신탁 해지 후 제출",tag:"김현경"},{id:"ms3",text:"주식 매각 및 거래내역서 준비",date:"잔금일 이전",st:"pending",note:"내역서 필수 첨부",tag:"정동수"},{id:"ms4",text:"주식 매각 및 거래내역서 준비",date:"잔금일 이전",st:"pending",note:"내역서 필수 첨부",tag:"김현경"}]}],
-"4-0":[{title:"잔금 납부",ac:"#16a34a",items:[{id:"r1",text:"현 거주 임차인 퇴거 확인",date:"2026.08.11",st:"soon",note:"임차인 퇴거 완료 후 잔금 진행"},{id:"r2",text:"잔금 납부 (13억 2,000만원)",date:"2026.10.01",st:"soon"},{id:"r3",text:"잔금 영수증 날인 수령",date:"2026.10.01",st:"soon",note:"사전 징구한 영수증 최종 확인"}]},{title:"정산",ac:"#7c3aed",items:[{id:"r4",text:"선수관리비 정산",date:"2026.10.01",st:"soon"},{id:"r5",text:"관리비 정산",date:"2026.10.01",st:"soon"},{id:"r6",text:"도시가스 정산",date:"2026.10.01",st:"soon"}]}],
-"4-1":[{title:"📎 잔금일 필요서류 — 개인 매수인 각자",ac:"#0891b2",items:[{id:"rd1",text:"신분증",st:"soon"},{id:"rd2",text:"매매계약서 원본",st:"soon"},{id:"rd3",text:"도장 (인감 또는 막도장)",st:"soon"},{id:"rd4",text:"주민등록초본 (주소변동 전부 기재)",st:"soon"},{id:"rd5",text:"주민등록등본 (가족 전원)",st:"soon"},{id:"rd6",text:"가족관계증명서 (가족 주민번호 표기)",st:"soon"}]},{title:"⚠️ 대리 잔금시 추가 서류",ac:"#9ca3af",items:[{id:"ra1",text:"대리인 신분증",st:"info"},{id:"ra2",text:"위임장 (확인용)",st:"info"},{id:"ra3",text:"매수인 인감증명서",st:"info"}]}],
-"4-2":[{title:"🗝 물품 인계 및 비밀번호 확인",ac:"#0891b2",items:[{id:"ri1",text:"물품인계서 확인",st:"soon"},{id:"ri2",text:"공동현관 비밀번호 확인",st:"soon"},{id:"ri3",text:"세대현관 비밀번호 확인",st:"soon"}]}],
-"4-3":[{title:"입주 후 필수 처리",ac:"#16a34a",items:[{id:"ru1",text:"전입신고",date:"입주 즉시",st:"soon",note:"성동구 주민센터 (신분증·계약서·도장)"},{id:"ru2",text:"관리실 방문 — 주차 등록",date:"입주 후",st:"soon"},{id:"ru3",text:"관리실 방문 — 입주자 카드 작성",date:"입주 후",st:"soon"}]},{title:"💸 매월 상환 — 금전소비대차",ac:"#d97706",items:[{id:"rp1",text:"매달 25일 · 10만원 원금 상환",st:"soon",note:"채권자 정운섭(시아버지) — 통장 이체 필수",tag:"김현경"}]}]
+const ST={
+  done:   {dot:"#16a34a",bg:"#dcfce7",txt:"#15803d",lbl:"완료"},
+  pending:{dot:"#ea580c",bg:"#ffedd5",txt:"#c2410c",lbl:"보완중"},
+  soon:   {dot:"#2563eb",bg:"#dbeafe",txt:"#1d4ed8",lbl:"예정"},
+  info:   {dot:"#9ca3af",bg:"#f3f4f6",txt:"#6b7280",lbl:"참고"},
 };
 
-let curMain=0,curSubs={2:0,4:0},chk={},mySet=new Set();
-try{chk=JSON.parse(localStorage.getItem(LKEY)||"{}");}catch{}
+// ══════════════════════════════
+// 고객 데이터
+// ══════════════════════════════
+const CLIENTS = {
 
-function pkey(m,s){return(m===2||m===4)?`${m}-${s}`:`${m}`;}
-function allItems(m){
-  if(m===2)return[0,1,2,3,4].flatMap(s=>(PAGES[`2-${s}`]||[]).flatMap(sec=>sec.items));
-  if(m===4)return[0,1,2,3].flatMap(s=>(PAGES[`4-${s}`]||[]).flatMap(sec=>sec.items));
-  return(PAGES[`${m}`]||[]).flatMap(sec=>sec.items);
-}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
-function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
-function reqNotif(){
-  if(!("Notification"in window))return toast("이 브라우저는 알림을 지원하지 않아요");
-  if(Notification.permission==="granted")return toast("✅ 알림 켜져 있어요!");
-  Notification.requestPermission().then(p=>{
-    if(p==="granted"){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");new Notification("서울숲한신더휴",{body:"알림 설정 완료 🏢"});}
-    else toast("❌ 브라우저 설정에서 알림 허용해주세요");
-  });
-}
-function sendNotif(title,body){if(Notification.permission==="granted")new Notification(title,{body});toast("🔔 "+body);}
-function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(chk));}catch{}}
-async function saveSB(){try{await sb.from(TB).upsert({id:RID,checked_items:chk,updated_at:new Date().toISOString()});setSB("ok");}catch{setSB("err");}}
-async function loadSB(){
-  try{
-    const{data,error}=await sb.from(TB).select("checked_items").eq("id",RID).single();
-    if(error&&error.code!=="PGRST116")throw error;
-    if(data?.checked_items){chk=data.checked_items;saveLocal();}
-    setSB("ok");
-  }catch{setSB("err");}
-  render();
-}
-function subscribeSB(){
-  sb.channel("ch-jdk").on("postgres_changes",{event:"*",schema:"public",table:TB,filter:`id=eq.${RID}`},payload=>{
-    const nd=payload.new?.checked_items;if(!nd)return;
-    Object.keys(nd).forEach(id=>{
-      if(nd[id]&&!chk[id]&&!mySet.has(id))sendNotif("서울숲한신더휴 ✅",`"${id}" 완료됐어요!`);
+  // ── 정동수·김현경 (매수인) ──
+  jdk: {
+    icon:"🏢", name:"서울숲한신더휴", addr:"114동 403호 · 성동구 행당동 349 · 매수인",
+    price:"18억 2,000만원", buyer:"정동수 · 김현경",
+    headerBg:"linear-gradient(135deg,#1e3a5f,#2563eb)",
+    activeColor:"#2563eb", subColor:"#7c3aed",
+    progGrad:"linear-gradient(90deg,#2563eb,#7c3aed)",
+    rowId:"jdk_v1",
+    tags:{"정동수":{bg:"#dbeafe",txt:"#1d4ed8"},"김현경":{bg:"#ede9fe",txt:"#6d28d9"}},
+    tabs:[{id:0,label:"가계약",icon:"🤝",date:"2026.04"},{id:1,label:"허가",icon:"📋",date:"2026.04"},{id:2,label:"계약",icon:"📝",date:"2026.05.08"},{id:3,label:"중도금",icon:"💰",date:"2026.06.22"},{id:4,label:"잔금",icon:"🏠",date:"2026.10.01"}],
+    sub:{2:["체결","거래신고","차용금","서류","미제출"],4:["납부","서류","물품","입주"]},
+    pages:{
+      "0":[{title:"가계약 진행",ac:"#16a34a",items:[{id:"g1",text:"가계약금 납부",date:"2026.04",st:"done",note:"매도인(정상순·이숙희) 이체 완료"},{id:"g2",text:"약정서 작성 및 서명",date:"2026.04",st:"done",note:"매매 약정서 쌍방 서명 완료"}]}],
+      "1":[{title:"토지거래계약 허가",ac:"#2563eb",items:[{id:"h1",text:"토지거래계약 허가신청",date:"2026.04.14",st:"done",note:"성동구청 접수"},{id:"h2",text:"토지거래계약 허가증 발급",date:"2026.04.24",st:"done",note:"허가증 수령 완료"}]}],
+      "2-0":[{title:"계약 체결",ac:"#7c3aed",items:[{id:"c1",text:"부동산 매매 계약 체결",date:"2026.05.08",st:"done",note:"매매가 18억 2,000만원 확정"},{id:"c2",text:"계약금 납부 (1억 8,200만원)",date:"2026.05.08",st:"done"},{id:"c3",text:"잔금 영수증 미리 도장 받기",date:"2026.05.08",st:"done",note:"잔금일 영수증 사전 징구"}]}],
+      "2-1":[{title:"🏛 부동산거래신고 — 계약 후 30일 이내",ac:"#0891b2",items:[{id:"rg1",text:"부동산거래신고 접수",date:"마감 2026.06.07",st:"soon",note:"계약일 2026.05.08 기준 30일 이내"},{id:"rg5",text:"부동산 임대차계약서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수 임대보증금 자금출처 증빙"},{id:"rg6",text:"금전소비대차계약서 제출",date:"계약 후 30일 이내",st:"soon",note:"김현경 시아버지 차용금 1억원 증빙",tag:"김현경"},{id:"rg3",text:"주택취득자금 조달 및 입주계획서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수·김현경 각각 제출"},{id:"rg4",text:"증빙서류 미제출 사유서 제출",date:"계약 후 30일 이내",st:"soon",note:"정동수·김현경 각각 제출"}]}],
+      "2-2":[{title:"💸 금전소비대차계약",ac:"#d97706",items:[{id:"c5",text:"금전소비대차계약 체결",date:"2026.05.06",st:"done",note:"채권자 정운섭(시아버지) → 채무자 김현경",tag:"김현경"},{id:"c6",text:"차용금액 1억원 · 무이자 · 상환기한 4년",st:"done",note:"주택 매수자금 목적"},{id:"c7",text:"매월 25일 10만원 원금 상환",st:"soon",note:"통장 이체 기록 필수 — 누락 없이 유지"}]}],
+      "2-3":[{title:"📎 계약일 필요서류 — 개인 매수인 각자",ac:"#0891b2",items:[{id:"cd1",text:"신분증 (정동수·김현경 각각)",st:"done"},{id:"cd2",text:"도장 또는 서명",st:"done"},{id:"cd3",text:"계약금",st:"done"}]},{title:"⚠️ 대리 계약시 추가 서류",ac:"#9ca3af",items:[{id:"ca1",text:"대리인 신분증",st:"info"},{id:"ca2",text:"위임장 (확인용)",st:"info"},{id:"ca3",text:"매수인 인감증명서 (최근 3개월 이내)",st:"info"}]}],
+      "2-4":[{title:"📌 미제출 서류 보완 일정",ac:"#d97706",items:[{id:"cs1",text:"예금잔액증명서",date:"2026.07 목표",st:"pending",note:"퇴직금 중도인출 예정 (계약 후 2개월)",tag:"정동수"},{id:"cs2",text:"예금잔액증명서",date:"2026.09 목표",st:"pending",note:"퇴직금 신탁 해지 예정 (8월말 실행)",tag:"김현경"},{id:"cs3",text:"주식거래내역서",date:"잔금일 이전",st:"pending",note:"잔금일 이전 주식 매각 예정",tag:"정동수"},{id:"cs4",text:"주식거래내역서",date:"잔금일 이전",st:"pending",note:"잔금일 이전 주식 매각 예정",tag:"김현경"}]}],
+      "3":[{title:"중도금 납부",ac:"#0891b2",items:[{id:"m1",text:"중도금 납부 (3억 1,800만원)",date:"2026.06.22",st:"soon"}]},{title:"📌 보완 서류 진행 현황",ac:"#d97706",items:[{id:"ms1",text:"예금잔액증명서 제출",date:"2026.07 목표",st:"pending",note:"퇴직금 중도인출 후 제출",tag:"정동수"},{id:"ms2",text:"예금잔액증명서 제출",date:"2026.09 목표",st:"pending",note:"퇴직금 신탁 해지 후 제출",tag:"김현경"},{id:"ms3",text:"주식 매각 및 거래내역서 준비",date:"잔금일 이전",st:"pending",note:"내역서 필수 첨부",tag:"정동수"},{id:"ms4",text:"주식 매각 및 거래내역서 준비",date:"잔금일 이전",st:"pending",note:"내역서 필수 첨부",tag:"김현경"}]}],
+      "4-0":[{title:"잔금 납부",ac:"#16a34a",items:[{id:"r1",text:"현 거주 임차인 퇴거 확인",date:"2026.08.11",st:"soon",note:"임차인 퇴거 완료 후 잔금 진행"},{id:"r2",text:"잔금 납부 (13억 2,000만원)",date:"2026.10.01",st:"soon"},{id:"r3",text:"잔금 영수증 날인 수령",date:"2026.10.01",st:"soon",note:"사전 징구한 영수증 최종 확인"}]},{title:"정산",ac:"#7c3aed",items:[{id:"r4",text:"선수관리비 정산",date:"2026.10.01",st:"soon"},{id:"r5",text:"관리비 정산",date:"2026.10.01",st:"soon"},{id:"r6",text:"도시가스 정산",date:"2026.10.01",st:"soon"}]}],
+      "4-1":[{title:"📎 잔금일 필요서류 — 개인 매수인 각자",ac:"#0891b2",items:[{id:"rd1",text:"신분증",st:"soon"},{id:"rd2",text:"매매계약서 원본",st:"soon"},{id:"rd3",text:"도장 (인감 또는 막도장)",st:"soon"},{id:"rd4",text:"주민등록초본 (주소변동 전부 기재)",st:"soon"},{id:"rd5",text:"주민등록등본 (가족 전원)",st:"soon"},{id:"rd6",text:"가족관계증명서 (가족 주민번호 표기)",st:"soon"}]},{title:"⚠️ 대리 잔금시 추가 서류",ac:"#9ca3af",items:[{id:"ra1",text:"대리인 신분증",st:"info"},{id:"ra2",text:"위임장 (확인용)",st:"info"},{id:"ra3",text:"매수인 인감증명서",st:"info"}]}],
+      "4-2":[{title:"🗝 물품 인계 및 비밀번호 확인",ac:"#0891b2",items:[{id:"ri1",text:"물품인계서 확인",st:"soon"},{id:"ri2",text:"공동현관 비밀번호 확인",st:"soon"},{id:"ri3",text:"세대현관 비밀번호 확인",st:"soon"}]}],
+      "4-3":[{title:"입주 후 필수 처리",ac:"#16a34a",items:[{id:"ru1",text:"전입신고",date:"입주 즉시",st:"soon",note:"성동구 주민센터 (신분증·계약서·도장)"},{id:"ru2",text:"관리실 방문 — 주차 등록",date:"입주 후",st:"soon"},{id:"ru3",text:"관리실 방문 — 입주자 카드 작성",date:"입주 후",st:"soon"}]},{title:"💸 매월 상환 — 금전소비대차",ac:"#d97706",items:[{id:"rp1",text:"매달 25일 · 10만원 원금 상환",st:"soon",note:"채권자 정운섭(시아버지) — 통장 이체 필수",tag:"김현경"}]}],
+    }
+  },
+
+  // ── 이종정 (매도인) ──
+  tangjeong: {
+    icon:"🏠", name:"탕정트라팰리스 201동 3303호", addr:"충남 아산시 탕정면 명암리 809 · 매도인",
+    price:"4억 5,500만원", buyer:"매도인 이종정",
+    headerBg:"linear-gradient(135deg,#0f4c35,#16a34a)",
+    activeColor:"#16a34a", subColor:"#16a34a",
+    progGrad:"linear-gradient(90deg,#16a34a,#0f4c35)",
+    rowId:"tangjeong_seller_v1",
+    tags:{"이종정":{bg:"#dcfce7",txt:"#15803d"},"유충만":{bg:"#dbeafe",txt:"#1d4ed8"}},
+    tabs:[{id:0,label:"가계약",icon:"🤝",date:"2026.05.28"},{id:1,label:"계약",icon:"📝",date:"2026.05.30"},{id:2,label:"중도금",icon:"💰",date:"2026.07.03"},{id:3,label:"잔금",icon:"🏠",date:"2026.08 말"}],
+    sub:{1:["체결","거래신고","서류"],3:["수령·정산","서류","물품인계"]},
+    pages:{
+      "0":[{title:"가계약 진행",ac:"#16a34a",items:[{id:"g1",text:"가계약 조건 문자 발송",date:"2026.05.28",st:"done",note:"매도인·매수인 동시 발송"},{id:"g2",text:"가계약금 수령 (200만원)",date:"2026.05.28",st:"done",note:"우리은행 299-044548-02-101"},{id:"g3",text:"매도인 동의 문자 회신",date:"2026.05.28",st:"done",note:"'동의합니다' 문자 발송"}]}],
+      "1-0":[{title:"계약 체결",ac:"#7c3aed",items:[{id:"c1",text:"정식 계약 체결",date:"2026.05.30 오전 11시",st:"soon",note:"매도인 이종정 · 매수인 유충만"},{id:"c2",text:"계약금 수령 (4,550만원)",date:"2026.05.30",st:"soon",note:"200만원 가계약금 포함"},{id:"c3",text:"계약서 원본 보관",date:"2026.05.30",st:"soon"}]}],
+      "1-1":[{title:"🏛 부동산거래신고 — 계약 후 30일 이내",ac:"#0891b2",items:[{id:"rg1",text:"부동산거래신고 접수",date:"마감 2026.06.29",st:"soon",note:"계약일 2026.05.30 기준 30일 이내"},{id:"rg2",text:"매매계약서 제출",date:"계약 후 30일 이내",st:"soon"}]}],
+      "1-2":[{title:"📎 계약일 필요서류 — 매도인 이종정",ac:"#0891b2",items:[{id:"cd1",text:"신분증",st:"soon"},{id:"cd2",text:"도장 (인감)",st:"soon"},{id:"cd3",text:"등기필증",st:"soon"},{id:"cd4",text:"통장사본 or 계좌번호",st:"soon",note:"우리은행 299-044548-02-101"}]},{title:"⚠️ 대리 계약시 추가 서류",ac:"#9ca3af",items:[{id:"ca1",text:"대리인 신분증",st:"info"},{id:"ca2",text:"위임장 (인감도장 날인)",st:"info"},{id:"ca3",text:"인감증명서",st:"info"}]}],
+      "2":[{title:"중도금 수령",ac:"#0891b2",items:[{id:"m1",text:"중도금 수령 (9,100만원)",date:"2026.07.03",st:"soon"}]},{title:"⚠️ 중도금 이후 주의사항",ac:"#d97706",items:[{id:"m2",text:"추가 대출·저당권 설정 금지",st:"soon",note:"중도금 입금 후 새로운 권리변동 불가 (특약)"}]}],
+      "3-0":[{title:"잔금 수령",ac:"#16a34a",items:[{id:"r1",text:"잔금 수령 (3억 1,850만원)",date:"2026.08 말",st:"soon",note:"계약일 협의 후 확정"},{id:"r2",text:"소유권이전 등기 협조",date:"잔금일",st:"soon"}]},{title:"정산",ac:"#7c3aed",items:[{id:"r3",text:"관리비 정산",date:"잔금일",st:"soon"},{id:"r4",text:"선수관리비 정산",date:"잔금일",st:"soon"},{id:"r5",text:"도시가스 정산",date:"잔금일",st:"soon"}]}],
+      "3-1":[{title:"📎 잔금일 필요서류 — 매도인 이종정",ac:"#0891b2",items:[{id:"rd1",text:"신분증",st:"soon"},{id:"rd2",text:"등기관리증 (등기필증) 원본",st:"soon"},{id:"rd3",text:"부동산 매도용 인감증명서",st:"soon",note:"매수인 유충만 인적사항 기재"},{id:"rd4",text:"인감도장",st:"soon"},{id:"rd5",text:"주민등록초본 (과거 주소변동 전부 기재)",st:"soon"}]},{title:"⚠️ 대리 잔금시 추가 서류",ac:"#9ca3af",items:[{id:"ra1",text:"대리인 신분증",st:"info"},{id:"ra2",text:"위임장 (인감도장 날인)",st:"info"},{id:"ra3",text:"인감증명서",st:"info"}]}],
+      "3-2":[{title:"🗝 물품 인계",ac:"#0891b2",items:[{id:"ri1",text:"물품인계서 작성 및 서명",st:"soon"},{id:"ri2",text:"열쇠·카드 인계",st:"soon"},{id:"ri3",text:"공동현관 비밀번호 알려주기",st:"soon"},{id:"ri4",text:"세대현관 비밀번호 알려주기",st:"soon"}]}],
+    }
+  }
+};
+
+// ── URL 파라미터로 고객 선택 ──
+const urlParams = new URLSearchParams(window.location.search);
+const clientKey = urlParams.get("c");
+const C = CLIENTS[clientKey];
+
+if(!C){
+  document.getElementById("header").style.display="none";
+  document.getElementById("main-tabs").style.display="none";
+  document.getElementById("sub-tabs").style.display="none";
+  document.getElementById("progress").style.display="none";
+  document.getElementById("content").style.display="none";
+  document.getElementById("error-page").style.display="flex";
+} else {
+  // 헤더 설정
+  document.getElementById("header").style.background=C.headerBg;
+  document.title=`체크리스트 | ${C.name}`;
+  document.getElementById("hicon").textContent=C.icon;
+  document.getElementById("hname").textContent=C.name;
+  document.getElementById("haddr").textContent=C.addr;
+  document.getElementById("hprice").textContent=`💵 ${C.price}`;
+  document.getElementById("hbuyer").textContent=`👥 ${C.buyer}`;
+
+  const sb=supabase.createClient(SB_URL,SB_KEY);
+  const LKEY=`chk_${clientKey}`;
+  let curMain=0, curSubs={}, chk={}, mySet=new Set();
+  try{chk=JSON.parse(localStorage.getItem(LKEY)||"{}");}catch{}
+
+  function pkey(m,s){
+    const hasSub=C.sub[m];
+    return hasSub?`${m}-${s}`:`${m}`;
+  }
+  function allItems(m){
+    const hasSub=C.sub[m];
+    if(hasSub)return Object.keys(hasSub).map((_,i)=>i).flatMap(s=>(C.pages[`${m}-${s}`]||[]).flatMap(sec=>sec.items));
+    return(C.pages[`${m}`]||[]).flatMap(sec=>sec.items);
+  }
+
+  function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
+  function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
+  function reqNotif(){
+    if(!("Notification"in window))return toast("이 브라우저는 알림을 지원하지 않아요");
+    if(Notification.permission==="granted")return toast("✅ 알림 켜져 있어요!");
+    Notification.requestPermission().then(p=>{
+      if(p==="granted"){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");}
+      else toast("❌ 브라우저 설정에서 알림 허용해주세요");
     });
-    chk=nd;mySet.clear();saveLocal();render();
-  }).subscribe(s=>{if(s==="SUBSCRIBED")setSB("ok");});
-}
+  }
+  function sendNotif(title,body){if(Notification.permission==="granted")new Notification(title,{body});toast("🔔 "+body);}
+  function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(chk));}catch{}}
+  async function saveSB(){try{await sb.from(TB).upsert({id:C.rowId,checked_items:chk,updated_at:new Date().toISOString()});setSB("ok");}catch{setSB("err");}}
+  async function loadSB(){
+    try{
+      const{data,error}=await sb.from(TB).select("checked_items").eq("id",C.rowId).single();
+      if(error&&error.code!=="PGRST116")throw error;
+      if(data?.checked_items){chk=data.checked_items;saveLocal();}
+      setSB("ok");
+    }catch{setSB("err");}
+    render();
+  }
+  function subscribeSB(){
+    sb.channel(`ch-${clientKey}`).on("postgres_changes",{event:"*",schema:"public",table:TB,filter:`id=eq.${C.rowId}`},payload=>{
+      const nd=payload.new?.checked_items;if(!nd)return;
+      Object.keys(nd).forEach(id=>{
+        if(nd[id]&&!chk[id]&&!mySet.has(id))sendNotif(`${C.name} ✅`,`완료됐어요!`);
+      });
+      chk=nd;mySet.clear();saveLocal();render();
+    }).subscribe(s=>{if(s==="SUBSCRIBED")setSB("ok");});
+  }
 
-render();
-if("Notification"in window&&Notification.permission==="default")document.getElementById("nbar").style.display="block";
-loadSB().then(()=>subscribeSB());
+  render();
+  if("Notification"in window&&Notification.permission==="default")document.getElementById("nbar").style.display="block";
+  loadSB().then(()=>subscribeSB());
 
-function render(){
-  const hasSub=curMain===2||curMain===4;
-  const subs=SUB[curMain]||[];
-  const csub=curSubs[curMain]??0;
-  const secs=PAGES[pkey(curMain,csub)]||[];
-  const ai=allItems(curMain);
-  const dn=ai.filter(i=>chk[i.id]||i.st==="done").length;
-  const pct=ai.length?Math.round((dn/ai.length)*100):0;
-  document.getElementById("main-tabs").innerHTML=TABS.map(t=>{const a=curMain===t.id;return`<button class="mtab${a?" active":""}" onclick="go(${t.id})"><span class="mtab-icon">${t.icon}</span>${t.label}</button>`;}).join("");
-  const se=document.getElementById("sub-tabs");
-  if(hasSub){se.style.display="flex";se.innerHTML=subs.map((l,i)=>{const a=(curSubs[curMain]??0)===i;return`<button class="stab${a?" active":""}" onclick="gs(${i})">${l}</button>`;}).join("");}else se.style.display="none";
-  document.getElementById("plabel").textContent=`${TABS[curMain].icon} ${TABS[curMain].label}`;
-  document.getElementById("ppct").textContent=`${pct}%`;
-  document.getElementById("pfill").style.width=`${pct}%`;
-  document.getElementById("content").innerHTML=secs.map(sec=>`<div><div class="sec-label" style="color:${sec.ac}"><div class="sec-bar" style="background:${sec.ac}"></div>${sec.title}</div><div class="card">${sec.items.map(item=>{const on=chk[item.id]||item.st==="done";const s=ST[item.st]||ST.soon;const tc=item.tag?TC[item.tag]:null;return`<div class="item${on?" on":""}" onclick="tap('${item.id}','${item.st}')"><div class="cb${on?" checked":""}" style="${on?"":"border-color:"+s.dot}">${on?"✓":""}</div><div class="item-body"><div class="item-text"><span class="t">${item.text}</span>${tc?`<span class="tag" style="background:${tc.bg};color:${tc.txt}">${item.tag}</span>`:""}</div>${(item.date||item.note)?`<div class="item-meta">${item.date?`<span class="idate" style="color:${s.dot}">📅 ${item.date}</span>`:""}${item.note?`<span class="inote">${item.note}</span>`:""}</div>`:""}</div><span class="badge" style="background:${on?ST.done.bg:s.bg};color:${on?ST.done.txt:s.txt}">${on?"완료":s.lbl}</span></div>`;}).join("")}</div></div>`).join("");
+  function render(){
+    const hasSub=C.sub[curMain];
+    const subs=hasSub?C.sub[curMain]:[];
+    const csub=curSubs[curMain]??0;
+    const secs=hasSub?(C.pages[`${curMain}-${csub}`]||[]):(C.pages[`${curMain}`]||[]);
+    const ai=allItems(curMain);
+    const dn=ai.filter(i=>chk[i.id]||i.st==="done").length;
+    const pct=ai.length?Math.round((dn/ai.length)*100):0;
+
+    document.getElementById("main-tabs").innerHTML=C.tabs.map(t=>{
+      const a=curMain===t.id;
+      return`<button class="mtab${a?" active":""}" onclick="go(${t.id})" style="${a?`color:${C.activeColor};border-bottom-color:${C.activeColor}`:""}">
+        <span class="mtab-icon">${t.icon}</span>${t.label}</button>`;}).join("");
+
+    const se=document.getElementById("sub-tabs");
+    if(hasSub){
+      se.style.display="flex";
+      se.innerHTML=subs.map((l,i)=>{const a=(curSubs[curMain]??0)===i;
+        return`<button class="stab${a?" active":""}" onclick="gs(${i})" style="${a?`color:${C.subColor};border-bottom-color:${C.subColor}`:""}">${l}</button>`;}).join("");
+    }else se.style.display="none";
+
+    document.getElementById("plabel").textContent=`${C.tabs[curMain].icon} ${C.tabs[curMain].label}`;
+    document.getElementById("ppct").textContent=`${pct}%`;
+    document.getElementById("ppct").style.color=C.activeColor;
+    document.getElementById("pfill").style.background=C.progGrad;
+    document.getElementById("pfill").style.width=`${pct}%`;
+
+    document.getElementById("content").innerHTML=secs.map(sec=>`
+      <div>
+        <div class="sec-label" style="color:${sec.ac}">
+          <div class="sec-bar" style="background:${sec.ac}"></div>${sec.title}</div>
+        <div class="card">${sec.items.map(item=>{
+          const on=chk[item.id]||item.st==="done";
+          const s=ST[item.st]||ST.soon;
+          const tc=item.tag?C.tags[item.tag]:null;
+          return`<div class="item${on?" on":""}" onclick="tap('${item.id}','${item.st}')">
+            <div class="cb${on?" checked":""}" style="${on?"":"border-color:"+s.dot}">${on?"✓":""}</div>
+            <div class="item-body">
+              <div class="item-text"><span class="t">${item.text}</span>
+                ${tc?`<span class="tag" style="background:${tc.bg};color:${tc.txt}">${item.tag}</span>`:""}</div>
+              ${(item.date||item.note)?`<div class="item-meta">
+                ${item.date?`<span class="idate" style="color:${s.dot}">📅 ${item.date}</span>`:""}
+                ${item.note?`<span class="inote">${item.note}</span>`:""}</div>`:""}
+            </div>
+            <span class="badge" style="background:${on?ST.done.bg:s.bg};color:${on?ST.done.txt:s.txt}">${on?"완료":s.lbl}</span>
+          </div>`;}).join("")}</div></div>`).join("");
+  }
+
+  window.go=function(m){curMain=m;render();}
+  window.gs=function(s){curSubs[curMain]=s;render();}
+  window.tap=function(id,st){
+    if(st==="done")return;
+    chk[id]=!chk[id];
+    mySet.add(id);saveLocal();saveSB();render();
+    toast(chk[id]?"✅ 완료!":"↩️ 해제");
+  }
 }
-function go(m){curMain=m;render();}
-function gs(s){curSubs[curMain]=s;render();}
-function tap(id,st){if(st==="done")return;chk[id]=!chk[id];mySet.add(id);saveLocal();saveSB();render();toast(chk[id]?"✅ 완료!":"↩️ 해제");}
 </script>
 </body>
 </html>
