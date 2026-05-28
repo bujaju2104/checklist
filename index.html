@@ -55,6 +55,18 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 #toast.show{opacity:1}
 #error-page{display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px;text-align:center}
 </style>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "39128b82-e41e-4f66-b343-6d8db083e430",
+      safari_web_id: "web.onesignal.auto.39128b82-e41e-4f66-b343-6d8db083e430",
+      notifyButton: { enable: false },
+      allowLocalhostAsSecureOrigin: false,
+    });
+  });
+</script>
 </head>
 <body>
 
@@ -123,10 +135,10 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 // ── Service Worker 등록 ──
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-// ── Web Push VAPID ──
-const VAPID_PUBLIC="BHVGniZiCYA9WH20TbA2OhrPbVLACKMdSuy-ZIhVCYDkc1GUZ0EXu_C5hJkveFaJTUWx7S_ooQZzIZ3BGUWCsQg";
-function urlB64(b){const p='='.repeat((4-b.length%4)%4);const s=(b+p).replace(/-/g,'+').replace(/_/g,'/');const r=atob(s);const a=new Uint8Array(r.length);for(let i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a;}
-async function subscribePush(rowId){try{const reg=await navigator.serviceWorker.ready;let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(VAPID_PUBLIC)});await sb.from("push_subscriptions").upsert({id:sub.endpoint,checklist_id:rowId,subscription:JSON.stringify(sub)});}catch(e){console.warn("push",e);}}
+// ── OneSignal Web Push ──
+async function subscribePush(rowId){
+  // OneSignal이 자동으로 구독 처리 — 별도 작업 불필요
+}
 
 // ══════════════════════════════
 // Supabase 설정
@@ -240,28 +252,24 @@ if(!C){
   function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
   function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
   function reqNotif(){
-    if(!("Notification"in window)){
-      const ua=navigator.userAgent;
-      const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
-      const isIOS=/iPad|iPhone|iPod/.test(ua);
-      if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
-      return toast("이 브라우저는 알림을 지원하지 않아요");
+    const ua=navigator.userAgent;
+    const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
+    const isIOS=/iPad|iPhone|iPod/.test(ua);
+    if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
+    if(window.OneSignal){
+      window.OneSignal.Notifications.requestPermission().then(granted=>{
+        if(granted){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");}
+        else toast("❌ 브라우저 설정에서 알림 허용해주세요");
+      });
+    } else if("Notification"in window){
+      Notification.requestPermission().then(p=>{
+        if(p==="granted"){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");}
+        else toast("❌ 브라우저 설정에서 알림 허용해주세요");
+      });
     }
-    if(Notification.permission==="granted"){subscribePush(C.rowId);return toast("✅ 알림 켜져 있어요!");}
-    Notification.requestPermission().then(p=>{
-      if(p==="granted"){
-        document.getElementById("nbar").style.display="none";
-        toast("✅ 알림 켜졌어요!");
-        subscribePush(C.rowId);
-      }else toast("❌ 브라우저 설정에서 알림 허용해주세요");
-    });
   }
   function sendNotif(title,body){
-    if(Notification.permission==="granted"){
-      if(navigator.serviceWorker?.controller){
-        navigator.serviceWorker.controller.postMessage({type:"SHOW_NOTIF",title,body});
-      }else{new Notification(title,{body});}
-    }
+    // OneSignal이 서버에서 푸시 발송 — 여기선 토스트만
     toast("🔔 "+body);
   }
   function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(chk));}catch{}}
