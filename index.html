@@ -6,6 +6,8 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <title>문멘토 매매 체크리스트</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1e3a5f"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -96,6 +98,10 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 <div id="toast"></div>
 
 <script>
+// ── Service Worker 등록 (PWA + 백그라운드 알림) ──
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
 // ══════════════════════════════
 // Supabase 설정
 // ══════════════════════════════
@@ -215,7 +221,17 @@ if(!C){
       else toast("❌ 브라우저 설정에서 알림 허용해주세요");
     });
   }
-  function sendNotif(title,body){if(Notification.permission==="granted")new Notification(title,{body});toast("🔔 "+body);}
+  function sendNotif(title,body){
+    if(Notification.permission==="granted"){
+      // SW 경유 → 페이지 백그라운드/최소화 상태에서도 알림 표시
+      if(navigator.serviceWorker?.controller){
+        navigator.serviceWorker.controller.postMessage({type:"SHOW_NOTIF",title,body});
+      } else {
+        new Notification(title,{body});
+      }
+    }
+    toast("🔔 "+body);
+  }
   function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(chk));}catch{}}
   async function saveSB(){try{await sb.from(TB).upsert({id:C.rowId,checked_items:chk,updated_at:new Date().toISOString()});setSB("ok");}catch{setSB("err");}}
   async function loadSB(){
