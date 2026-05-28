@@ -89,7 +89,7 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
   </div>
 </div>
 
-<div class="notif-bar" id="nbar" onclick="reqNotif()">🔔 탭하면 알림을 받을 수 있어요!</div>
+<div class="notif-bar" id="nbar" onclick="reqNotif()" ontouchstart="reqNotif()" style="position:relative;z-index:1000;user-select:none;-webkit-user-select:none;">🔔 탭하면 알림을 받을 수 있어요!</div>
 <div id="main-tabs"></div>
 <div id="sub-tabs" style="display:none"></div>
 <div id="progress">
@@ -260,13 +260,18 @@ if(!C){
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
     if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
-    if(!window.OneSignal)return toast("잠시 후 다시 탭해주세요");
-    OneSignal.Notifications.requestPermission().then(granted=>{
-      if(granted){
+    if(!("Notification"in window))return toast("이 브라우저는 알림 미지원");
+    // 브라우저 네이티브 알림 요청 (가장 안정적)
+    Notification.requestPermission().then(function(p){
+      if(p==="granted"){
         document.getElementById("nbar").style.display="none";
         toast("✅ 알림 켜졌어요!");
+        // OneSignal 구독 등록
+        if(window.OneSignal){
+          try{OneSignal.Notifications.requestPermission();}catch(e){}
+        }
       } else {
-        toast("❌ 브라우저 설정에서 알림 허용해주세요");
+        toast("설정 > 알림 > 허용 으로 변경해주세요");
       }
     });
   }
