@@ -61,10 +61,14 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "39128b82-e41e-4f66-b343-6d8db083e430",
-      safari_web_id: "web.onesignal.auto.39128b82-e41e-4f66-b343-6d8db083e430",
+      serviceWorkerPath: "/checklist/OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "/checklist/" },
       notifyButton: { enable: false },
-      allowLocalhostAsSecureOrigin: false,
     });
+    // 구독 상태 확인 후 노란 바 표시 제어
+    const subscribed = OneSignal.User.PushSubscription.optedIn;
+    const nbar = document.getElementById("nbar");
+    if(nbar) nbar.style.display = subscribed ? "none" : "block";
   });
 </script>
 </head>
@@ -256,17 +260,15 @@ if(!C){
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
     if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
-    if(window.OneSignal){
-      window.OneSignal.Notifications.requestPermission().then(granted=>{
-        if(granted){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");}
-        else toast("❌ 브라우저 설정에서 알림 허용해주세요");
-      });
-    } else if("Notification"in window){
-      Notification.requestPermission().then(p=>{
-        if(p==="granted"){document.getElementById("nbar").style.display="none";toast("✅ 알림 켜졌어요!");}
-        else toast("❌ 브라우저 설정에서 알림 허용해주세요");
-      });
-    }
+    if(!window.OneSignal)return toast("잠시 후 다시 탭해주세요");
+    OneSignal.Notifications.requestPermission().then(granted=>{
+      if(granted){
+        document.getElementById("nbar").style.display="none";
+        toast("✅ 알림 켜졌어요!");
+      } else {
+        toast("❌ 브라우저 설정에서 알림 허용해주세요");
+      }
+    });
   }
   function sendNotif(title,body){
     // OneSignal이 서버에서 푸시 발송 — 여기선 토스트만
