@@ -65,10 +65,19 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
       serviceWorkerParam: { scope: "/checklist/" },
       notifyButton: { enable: false },
     });
-    // 구독 상태 확인 후 노란 바 표시 제어
-    const subscribed = OneSignal.User.PushSubscription.optedIn;
     const nbar = document.getElementById("nbar");
-    if(nbar) nbar.style.display = subscribed ? "none" : "block";
+    const subscribed = OneSignal.User.PushSubscription.optedIn;
+    if(subscribed){
+      // 이미 구독됨 → 노란 바 숨기기
+      if(nbar) nbar.style.display="none";
+    } else if(Notification.permission==="granted"){
+      // 브라우저 허용 상태 → 자동 구독 등록
+      await OneSignal.Notifications.requestPermission();
+      if(nbar) nbar.style.display="none";
+    } else {
+      // 아직 미허용 → 노란 바 표시
+      if(nbar) nbar.style.display="block";
+    }
   });
 </script>
 </head>
