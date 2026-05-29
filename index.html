@@ -154,9 +154,6 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
   });
 })();
 
-// ── Service Worker 등록 ──
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-
 // ── OneSignal Web Push ──
 async function subscribePush(rowId){
   // OneSignal이 자동으로 구독 처리 — 별도 작업 불필요
