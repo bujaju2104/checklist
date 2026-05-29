@@ -65,18 +65,22 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
       serviceWorkerParam: { scope: "/checklist/" },
       notifyButton: { enable: false },
     });
-    const nbar = document.getElementById("nbar");
-    const subscribed = OneSignal.User.PushSubscription.optedIn;
-    if(subscribed){
-      // 이미 구독됨 → 노란 바 숨기기
-      if(nbar) nbar.style.display="none";
-    } else if(Notification.permission==="granted"){
-      // 브라우저 허용 상태 → 자동 구독 등록
-      await OneSignal.Notifications.requestPermission();
-      if(nbar) nbar.style.display="none";
+    async function applyNotifState(){
+      const nbar = document.getElementById("nbar");
+      if(!nbar) return;
+      if(OneSignal.User.PushSubscription.optedIn){
+        nbar.style.display="none";
+      } else if(Notification.permission==="granted"){
+        try{ await OneSignal.User.PushSubscription.optIn(); }catch(e){}
+        nbar.style.display="none";
+      } else {
+        nbar.style.display="block";
+      }
+    }
+    if(document.readyState==="loading"){
+      document.addEventListener("DOMContentLoaded", applyNotifState);
     } else {
-      // 아직 미허용 → 노란 바 표시
-      if(nbar) nbar.style.display="block";
+      applyNotifState();
     }
   });
 </script>
@@ -269,18 +273,14 @@ if(!C){
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
     if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
-    if(!("Notification"in window))return toast("이 브라우저는 알림 미지원");
-    // 브라우저 네이티브 알림 요청 (가장 안정적)
-    Notification.requestPermission().then(function(p){
-      if(p==="granted"){
+    if(!window.OneSignal)return toast("잠시 후 다시 탭해주세요");
+    OneSignal.Notifications.requestPermission().then(async function(granted){
+      if(granted){
+        try{ await OneSignal.User.PushSubscription.optIn(); }catch(e){}
         document.getElementById("nbar").style.display="none";
         toast("✅ 알림 켜졌어요!");
-        // OneSignal 구독 등록
-        if(window.OneSignal){
-          try{OneSignal.Notifications.requestPermission();}catch(e){}
-        }
       } else {
-        toast("설정 > 알림 > 허용 으로 변경해주세요");
+        toast("설정 > 알림 > 허용으로 변경해주세요");
       }
     });
   }
