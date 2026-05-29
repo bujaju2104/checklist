@@ -61,8 +61,6 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "39128b82-e41e-4f66-b343-6d8db083e430",
-      serviceWorkerPath: "/checklist/OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/checklist/" },
       notifyButton: { enable: false },
     });
     async function applyNotifState(){
@@ -77,6 +75,13 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
         nbar.style.display="block";
       }
     }
+    // 구독 상태 변경 시 자동으로 바 숨기기
+    OneSignal.User.PushSubscription.addEventListener("change", function(e){
+      if(e.current.optedIn){
+        const nbar=document.getElementById("nbar");
+        if(nbar) nbar.style.display="none";
+      }
+    });
     if(document.readyState==="loading"){
       document.addEventListener("DOMContentLoaded", applyNotifState);
     } else {
