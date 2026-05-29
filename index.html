@@ -22,7 +22,7 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 .h-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border-radius:20px;padding:2px 9px;font-size:10px}
 .sync-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.15);border-radius:20px;padding:2px 8px;font-size:10px;color:#86efac;cursor:pointer}
-.notif-bar{background:#f59e0b;color:#fff;font-size:11px;font-weight:700;padding:8px 14px;text-align:center;cursor:pointer;flex-shrink:0;display:none}
+.notif-bar{background:#f59e0b;color:#fff;font-size:11px;font-weight:700;padding:8px 14px;text-align:center;cursor:pointer;flex-shrink:0;display:none;position:relative;z-index:99999;pointer-events:all;-webkit-tap-highlight-color:rgba(255,165,0,0.3)}
 #main-tabs{display:flex;background:#fff;border-bottom:2px solid #e2e8f0;flex-shrink:0}
 .mtab{flex:1;padding:7px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:10px;font-weight:500}
 .mtab.active{border-bottom-width:2px;font-weight:700}
@@ -271,6 +271,7 @@ if(!C){
   function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
   function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
   function reqNotif(){
+    toast("🔔 탭 인식됨!");
     const ua=navigator.userAgent;
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
