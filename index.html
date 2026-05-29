@@ -303,7 +303,14 @@ if(!C){
   }
 
   render();
-  if("Notification"in window&&Notification.permission==="default")document.getElementById("nbar").style.display="block";
+  if("Notification"in window){
+    if(Notification.permission==="default"){
+      document.getElementById("nbar").style.display="block";
+    } else if(Notification.permission==="granted"){
+      // 이미 허용된 기기 → OneSignal 자동 구독
+      loadOneSignalAndSubscribe();
+    }
+  }
   loadSB().then(()=>subscribeSB());
 
   function render(){
