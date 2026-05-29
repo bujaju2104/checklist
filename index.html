@@ -236,16 +236,42 @@ if(!C){
 
   function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
   function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
+  // OneSignal 지연 로드 (클릭 차단 방지)
+  function loadOneSignalAndSubscribe(){
+    return new Promise(function(resolve){
+      if(window.OneSignalDeferred){resolve();return;}
+      window.OneSignalDeferred=[];
+      const s=document.createElement('script');
+      s.src='https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+      s.defer=true;
+      s.onload=function(){
+        OneSignalDeferred.push(async function(OS){
+          await OS.init({appId:"39128b82-e41e-4f66-b343-6d8db083e430",notifyButton:{enable:false}});
+          try{await OS.User.PushSubscription.optIn();}catch(e){}
+          resolve();
+        });
+      };
+      document.head.appendChild(s);
+    });
+  }
+
   function reqNotif(){
     const ua=navigator.userAgent;
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
     if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
     if(!("Notification"in window))return toast("이 브라우저는 알림 미지원");
+    if(Notification.permission==="granted"){
+      document.getElementById("nbar").style.display="none";
+      loadOneSignalAndSubscribe();
+      toast("✅ 알림 이미 허용됨!");
+      return;
+    }
     Notification.requestPermission().then(function(p){
       if(p==="granted"){
         document.getElementById("nbar").style.display="none";
         toast("✅ 알림 켜졌어요!");
+        loadOneSignalAndSubscribe(); // 허용 후 OneSignal 구독
       } else {
         toast("설정 > 알림 > 허용으로 변경해주세요");
       }
