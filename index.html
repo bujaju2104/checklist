@@ -55,40 +55,6 @@ button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;backgrou
 #toast.show{opacity:1}
 #error-page{display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px;text-align:center}
 </style>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "39128b82-e41e-4f66-b343-6d8db083e430",
-      notifyButton: { enable: false },
-    });
-    async function applyNotifState(){
-      const nbar = document.getElementById("nbar");
-      if(!nbar) return;
-      if(OneSignal.User.PushSubscription.optedIn){
-        nbar.style.display="none";
-      } else if(Notification.permission==="granted"){
-        try{ await OneSignal.User.PushSubscription.optIn(); }catch(e){}
-        nbar.style.display="none";
-      } else {
-        nbar.style.display="block";
-      }
-    }
-    // 구독 상태 변경 시 자동으로 바 숨기기
-    OneSignal.User.PushSubscription.addEventListener("change", function(e){
-      if(e.current.optedIn){
-        const nbar=document.getElementById("nbar");
-        if(nbar) nbar.style.display="none";
-      }
-    });
-    if(document.readyState==="loading"){
-      document.addEventListener("DOMContentLoaded", applyNotifState);
-    } else {
-      applyNotifState();
-    }
-  });
-</script>
 </head>
 <body>
 
@@ -271,25 +237,21 @@ if(!C){
   function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
   function setSB(s){const b=document.getElementById("sbadge");b.textContent=s==="ok"?"✅ 실시간 연동":s==="err"?"❌ 연결끊김":"🔄 연결중...";}
   function reqNotif(){
-    toast("🔔 탭 인식됨!");
     const ua=navigator.userAgent;
     const isInApp=/KAKAO|Line|Instagram|FBAV|FBAN/i.test(ua);
     const isIOS=/iPad|iPhone|iPod/.test(ua);
     if(isInApp)return toast(isIOS?"Safari로 열어주세요 🔔":"Chrome으로 열어주세요 🔔");
     if(!("Notification"in window))return toast("이 브라우저는 알림 미지원");
-    Notification.requestPermission().then(async function(p){
+    Notification.requestPermission().then(function(p){
       if(p==="granted"){
         document.getElementById("nbar").style.display="none";
         toast("✅ 알림 켜졌어요!");
-        if(window.OneSignal){
-          try{ await OneSignal.User.PushSubscription.optIn(); }catch(e){}
-        }
       } else {
         toast("설정 > 알림 > 허용으로 변경해주세요");
       }
     });
   }
-  function sendNotif(title,body){
+    function sendNotif(title,body){
     // OneSignal이 서버에서 푸시 발송 — 여기선 토스트만
     toast("🔔 "+body);
   }
@@ -315,10 +277,7 @@ if(!C){
   }
 
   render();
-  if("Notification"in window){
-    if(Notification.permission==="default")document.getElementById("nbar").style.display="block";
-    else if(Notification.permission==="granted")subscribePush(C.rowId);
-  }
+  if("Notification"in window&&Notification.permission==="default")document.getElementById("nbar").style.display="block";
   loadSB().then(()=>subscribeSB());
 
   function render(){
