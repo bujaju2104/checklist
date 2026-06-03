@@ -2,14 +2,22 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="서울숲한신더휴"/>
 <meta name="application-name" content="서울숲한신더휴"/>
+<meta name="theme-color" content="#1e3a5f"/>
+<link rel="manifest" href="./manifest-jdk.json"/>
+<link rel="apple-touch-icon" href="./icon-192.png"/>
 <title>서울숲한신더휴</title>
 <meta property="og:title" content="서울숲한신더휴 매매 체크리스트"/>
 <meta property="og:description" content="정동수 · 김현경 | 18억 2,000만원 | 문멘토공인중개사사무소"/>
 <meta property="og:type" content="website"/>
-<meta http-equiv="refresh" content="0;url=./index.html?c=jdk"/>
-<script>window.location.replace('./index.html?c=jdk');</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js');
+}
+window.location.replace('./index.html?c=jdk');
+</script>
 </head>
 <body></body>
 </html>
