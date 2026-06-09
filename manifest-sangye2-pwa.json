@@ -1,0 +1,50 @@
+{
+  "id": "/checklist/sangye2-choigwan.html",
+  "name": "상계2구역 매매 체크리스트",
+  "short_name": "상계2체크",
+  "description": "상계뉴타운 2구역 최종관님 매매 진행 체크리스트",
+  "start_url": "/checklist/sangye2-choigwan.html",
+  "scope": "/checklist/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait",
+  "background_color": "#f5f4f0",
+  "theme_color": "#1a2744",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/checklist/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/checklist/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "상계2구역 체크리스트",
+      "short_name": "상계2",
+      "description": "상계2구역 매매 체크리스트 바로가기",
+      "url": "/checklist/sangye2-choigwan.html",
+      "icons": [
+        {
+          "src": "/checklist/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
