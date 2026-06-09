@@ -1,1 +1,172 @@
+const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
+function onlyNumber(v: string | null) {
+      return (v || "").replace(/[^0-9]/g, "");
+}
+
+async function supabaseFetch(url: string, serviceKey: string, options: RequestInit = {}) {
+      const headers = new Headers(options.headers || {});
+        headers.set("apikey", serviceKey);
+          headers.set("Authorization", `Bearer ${serviceKey}`);
+            if (!headers.has("Content-Type") && options.body) headers.set("Content-Type", "application/json");
+
+              const res = await fetch(url, { ...options, headers });
+                const text = await res.text();
+                  let data: unknown = null;
+                    try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+
+                      if (!res.ok) throw new Error(JSON.stringify(data));
+                        return data;
+}
+
+Deno.serve(async (req) => {
+      if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+        try {
+                const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+                    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+                        const adminPin = Deno.env.get("ADMIN_PIN") || "";
+
+                            if (!supabaseUrl || !serviceKey) throw new Error("Supabase service secret 확인이 필요합니다.");
+                                if (!adminPin) throw new Error("ADMIN_PIN secret 설정이 필요합니다.");
+
+                                    const body = await req.json().catch(() => ({}));
+                                        const pin = String(body.pin || "");
+                                            const action = String(body.action || "");
+                                                const pageId = String(body.pageId || "sangye2-choigwan");
+
+                                                    if (pin !== adminPin) {
+                                                              return new Response(JSON.stringify({ ok: false, error: "관리자 PIN이 맞지 않습니다." }), {
+                                                                        status: 401,
+                                                                                headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                              });
+                                                    }
+
+                                                        if (action === "list") {
+                                                                  const contacts = await supabaseFetch(
+                                                                            `${supabaseUrl}/rest/v1/sms_contacts?page_id=eq.${encodeURIComponent(pageId)}&select=id,name,phone,enabled,created_at&order=created_at.asc`,
+                                                                                    serviceKey
+                                                                  );
+
+                                                                        const schedules = await supabaseFetch(
+                                                                                    `${supabaseUrl}/rest/v1/sms_schedules?page_id=eq.${encodeURIComponent(pageId)}&select=id,title,due_at,status,sent_at,created_at&order=due_at.asc`,
+                                                                                            serviceKey
+                                                                        );
+
+                                                                              return new Response(JSON.stringify({ ok: true, contacts, schedules }), {
+                                                                                        headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                                              });
+                                                        }
+
+                                                            if (action === "saveContact") {
+                                                                      const name = String(body.name || "").trim();
+                                                                            const phone = onlyNumber(String(body.phone || ""));
+
+                                                                                  if (!name) throw new Error("이름을 입력해주세요.");
+                                                                                        if (phone.length < 10) throw new Error("휴대폰 번호를 확인해주세요.");
+
+                                                                                              await supabaseFetch(`${supabaseUrl}/rest/v1/sms_contacts?on_conflict=page_id,phone`, serviceKey, {
+                                                                                                        method: "POST",
+                                                                                                                headers: { "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates,return=minimal" },
+                                                                                                                        body: JSON.stringify({ page_id: pageId, name, phone, enabled: true }),
+                                                                                              });
+
+                                                                                                    return new Response(JSON.stringify({ ok: true }), {
+                                                                                                                headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                                                                    });
+                                                            }
+
+                                                                if (action === "deleteContact") {
+                                                                          const id = String(body.id || "");
+                                                                                if (!id) throw new Error("삭제할 연락처 ID가 없습니다.");
+
+                                                                                      await supabaseFetch(`${supabaseUrl}/rest/v1/sms_contacts?id=eq.${encodeURIComponent(id)}`, serviceKey, {
+                                                                                                method: "DELETE",
+                                                                                                        headers: { "Prefer": "return=minimal" },
+                                                                                      });
+
+                                                                                            return new Response(JSON.stringify({ ok: true }), {
+                                                                                                        headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                                                            });
+                                                                }
+
+                                                                    if (action === "saveSchedule") {
+                                                                              const title = String(body.title || "").trim();
+                                                                                    const dueAt = String(body.dueAt || "");
+                                                                                          const message = String(body.message || "").trim();
+
+                                                                                                if (!title) throw new Error("예약 제목이 없습니다.");
+                                                                                                      if (!dueAt) throw new Error("예약일이 없습니다.");
+                                                                                                            if (!message) throw new Error("예약 메시지가 없습니다.");
+
+                                                                                                                  await supabaseFetch(`${supabaseUrl}/rest/v1/sms_schedules`, serviceKey, {
+                                                                                                                            method: "POST",
+                                                                                                                                    headers: { "Content-Type": "application/json", "Prefer": "return=minimal" },
+                                                                                                                                            body: JSON.stringify({
+                                                                                                                                                          page_id: pageId,
+                                                                                                                                                                    title,
+                                                                                                                                                                              message,
+                                                                                                                                                                                        due_at: dueAt,
+                                                                                                                                                                                                  status: "예약중",
+                                                                                                                                            }),
+                                                                                                                  });
+
+                                                                                                                        return new Response(JSON.stringify({ ok: true }), {
+                                                                                                                                    headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                                                                                        });
+                                                                    }
+
+                                                                        if (action === "deleteSchedule") {
+                                                                                  const id = String(body.id || "");
+                                                                                        if (!id) throw new Error("삭제할 예약 ID가 없습니다.");
+
+                                                                                              await supabaseFetch(`${supabaseUrl}/rest/v1/sms_schedules?id=eq.${encodeURIComponent(id)}`, serviceKey, {
+                                                                                                        method: "DELETE",
+                                                                                                                headers: { "Prefer": "return=minimal" },
+                                                                                              });
+
+                                                                                                    return new Response(JSON.stringify({ ok: true }), {
+                                                                                                                headers: { ...corsHeaders, "Content-Type": "application/json" },
+                                                                                                    });
+                                                                        }
+
+                                                                            throw new Error("지원하지 않는 action입니다.");
+        } catch (e) {
+                return new Response(JSON.stringify({ ok: false, error: String(e?.message || e) }), {
+                          status: 500,
+                                headers: { ...corsHeaders, "Content-Type": "application/json" },
+                });
+        }
+});
+
+
+                })
+        }
+                                                                                                    })
+                                                                                              })
+                                                                        }
+                                                                                                                        })
+                                                                                                                                            })
+                                                                                                                  })
+                                                                    }
+                                                                                            })
+                                                                                      })
+                                                                }
+                                                                                                    })
+                                                                                              })
+                                                            }
+                                                                              })
+                                                                        )
+                                                                  )
+                                                        }
+                                                              })
+                                                    }
+        }
+})
+}
+}
+}
