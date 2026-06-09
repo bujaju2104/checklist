@@ -9,16 +9,15 @@
 <meta property="og:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
 <meta property="og:url" content="https://bujaju2104.github.io/checklist/sangye2-choigwan.html">
 <meta property="og:image" content="https://bujaju2104.github.io/checklist/icon-512.png">
-
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="상계뉴타운 2구역 매매 체크리스트">
 <meta name="twitter:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
 <meta name="twitter:image" content="https://bujaju2104.github.io/checklist/icon-512.png">
-
 <link rel="manifest" href="/checklist/manifest-sangye2.json">
 <link rel="icon" href="/checklist/icon-192.png">
 <link rel="apple-touch-icon" href="/checklist/icon-192.png">
-<meta name="theme-color" content="#1a2744"> 
+<meta name="theme-color" content="#1a2744">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="manifest" href="/checklist/manifest-sangye2.json">
 <link rel="icon" href="/checklist/icon-192.png">
 <link rel="apple-touch-icon" href="/checklist/icon-192.png">
@@ -273,6 +272,66 @@ drawTabs();render();upd();
   }
 
   initRealtime();
+})();
+</script>
+
+
+<script>
+(function(){
+  const SEND_SMS_FUNCTION_URL = "https://bjmanwqmoeobkpxehfpm.supabase.co/functions/v1/send-checklist-sms";
+  const SUPABASE_ANON_KEY_FOR_SMS = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA";
+  const SMS_COOLDOWN_MS = 45000;
+  let lastSmsAt = 0;
+
+  function getActorNameForSms(){
+    try {
+      let actor = localStorage.getItem("sg2_actor_name") || "";
+      if(!actor){
+        actor = prompt("사용자 이름을 입력해주세요. 예) 문멘토 / 최종관", "문멘토") || "문멘토";
+        localStorage.setItem("sg2_actor_name", actor);
+      }
+      return actor;
+    } catch(e) {
+      return "문멘토";
+    }
+  }
+
+  async function sendChecklistSms(itemTitle, checked){
+    try {
+      const now = Date.now();
+      if(now - lastSmsAt < SMS_COOLDOWN_MS) return;
+      lastSmsAt = now;
+
+      const actor = getActorNameForSms();
+
+      await fetch(SEND_SMS_FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY_FOR_SMS,
+          "apikey": SUPABASE_ANON_KEY_FOR_SMS
+        },
+        body: JSON.stringify({
+          actor: actor,
+          itemTitle: itemTitle || "체크리스트 항목",
+          checked: checked === true,
+          pageUrl: "https://bujaju2104.github.io/checklist/sangye2-choigwan.html"
+        })
+      });
+    } catch(e) {
+      console.log("SMS send failed", e);
+    }
+  }
+
+  const originalChk = window.chk;
+  if(typeof originalChk === "function"){
+    window.chk = function(el){
+      const title = el && el.querySelector ? (el.querySelector(".cmain")?.textContent || "체크리스트 항목") : "체크리스트 항목";
+      originalChk(el);
+      const isDone = el && el.classList ? el.classList.contains("done") : false;
+      sendChecklistSms(title, isDone);
+    };
+  }
 })();
 </script>
 
