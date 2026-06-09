@@ -123,7 +123,7 @@ function renderPage(p,g,pi){if(p.kind==='dark')return `<div class="dark"><div cl
  if(p.kind==='stage')return `<div class="card flex"><div class="ch navy">${p.title}<span class="tiny">스크롤 없음</span></div><div class="body">${p.items.map(it=>`<div class="stage"><div class="sico ${it[0]}">${it[0]==='done'?'✅':it[0]==='now'?'⏳':'🏗'}</div><div class="sinfo"><div class="sn">${esc(it[1])}</div><div class="sd">${esc(it[2])}</div></div><span class="badge ${it[0]}">${esc(it[3])}</span></div>`).join('')}</div></div>`;
  if(p.kind==='pay')return `<div class="card flex"><div class="ch ${p.color}">${p.title}</div><div class="body">${p.items.map(it=>`<div class="pay"><span class="dot ${it[0]}"></span><div style="flex:1"><div class="main">${esc(it[1])}</div><div class="sub">${esc(it[2])}</div></div><div class="pa">${esc(it[3])}</div></div>`).join('')}<div class="acct"><div class="al">매도자 계좌 · 국민은행</div><div class="anum">007050033372</div><div class="sub" style="color:rgba(255,255,255,.55)">예금주: 심재욱</div><button class="copy" onclick="copyAcct()">📋 복사</button></div></div></div>`;
  return `<div class="card flex"><div class="ch ${p.color||'navy'}">${p.title}<span class="tiny">${pi+1}/${D[g].pages.length}</span></div><div class="body">${p.items.map((it,i)=>{const key=`${g}_${pi}_${i}`,on=S.checks[key];return `<div class="ci ${on?'done':''}" onclick="chk('${key}','${esc(it[0])}')"><div class="box"><span class="tick">✓</span></div><div><div class="main">${esc(it[0])}</div>${it[1]?`<div class="sub">${esc(it[1])}</div>`:''}${it[2]?`<span class="tag ${it[2].includes('필수')?'':it[2].includes('리스크')||it[2].includes('중요')?'o':'gray'}">${esc(it[2])}</span>`:''}</div></div>`}).join('')}</div></div>`}
-function renderForm(){return `<div class="screen"><div class="card flex"><div class="ch blue">📱 알림 설정 / 추가</div><div class="body"><div class="alert" style="margin-bottom:8px">문자 비용이 발생하므로 알림 받을 휴대폰 등록과 예약 알림 설정은 관리자만 변경할 수 있습니다.</div><div class="main" style="margin-bottom:4px">알림 받을 휴대폰</div><input class="inp" id="bp" value="${esc(S.buyer.phone||'')}" placeholder="010-0000-0000"><div class="main" style="margin:8px 0 4px">카카오톡 ID</div><input class="inp" id="bk" value="${esc(S.buyer.kakao||'')}" placeholder="카카오톡 ID"><button class="save" onclick="saveBuyer()">💾 연락처 저장</button><div style="height:10px"></div><div class="main" style="margin-bottom:4px">알림 직접 추가</div><input class="inp" id="alarmTitle" placeholder="예: 잔금 D-7 서류 확인"><div class="minirow"><button class="save" onclick="addAlarm('나')">내 알림 추가</button><button class="save" onclick="addAlarm('최종관님')">수신자 알림 추가</button></div><div style="height:8px"></div>${['계약금 D-1','계약금 당일','관리처분인가 예정','잔금 D-7','잔금 D-1','승계 완료'].map(x=>`<div class="pay" onclick="quickAlarm('${x}')"><span class="dot now"></span><div style="flex:1"><div class="main">${x} 알림</div><div class="sub">누르면 내 알림 기록에 추가됩니다</div></div><span class="badge now">추가</span></div>`).join('')}</div></div></div>`}
+function renderForm(){return `<div class="screen"><div class="card flex"><div class="ch blue">📱 알림 설정 / 추가</div><div class="body"><div class="alert" style="margin-bottom:8px">저장된 연락처 전원에게 체크 변경 문자 알림이 발송됩니다. 연락처는 Supabase에 저장되어 다른 기기에서도 함께 사용됩니다.</div><div class="main" style="margin-bottom:4px">알림 받을 휴대폰</div><input class="inp" id="bp" value="${esc(S.buyer.phone||'')}" placeholder="010-0000-0000"><div class="main" style="margin:8px 0 4px">카카오톡 ID</div><input class="inp" id="bk" value="${esc(S.buyer.kakao||'')}" placeholder="카카오톡 ID"><button class="save" onclick="saveBuyer()">💾 연락처 저장</button><div style="height:10px"></div><div class="main" style="margin-bottom:4px">알림 직접 추가</div><input class="inp" id="alarmTitle" placeholder="예: 잔금 D-7 서류 확인"><div class="minirow"><button class="save" onclick="addAlarm('나')">내 알림 추가</button><button class="save" onclick="addAlarm('최종관님')">수신자 알림 추가</button></div><div style="height:8px"></div>${['계약금 D-1','계약금 당일','관리처분인가 예정','잔금 D-7','잔금 D-1','승계 완료'].map(x=>`<div class="pay" onclick="quickAlarm('${x}')"><span class="dot now"></span><div style="flex:1"><div class="main">${x} 알림</div><div class="sub">누르면 내 알림 기록에 추가됩니다</div></div><span class="badge now">추가</span></div>`).join('')}</div></div></div>`}
 function renderLog(){return `<div class="screen"><div class="card"><div class="ch navy">✍️ 메모 추가</div><div class="body"><textarea class="memo" id="memoIn" placeholder="통화 내용, 진행 사항, 특이사항 입력"></textarea><button class="save" onclick="addMemo()">기록 저장</button></div></div><div class="card flex"><div class="ch navy">📁 최근 진행 기록 <span class="tiny">최근 5개 표시 · 삭제 가능</span></div><div class="body" id="logs">${(S.logs||[]).slice(0,5).map((l,i)=>`<div class="log"><div class="lt"><span>${esc(l.ts)}</span><button class="del" onclick="delLog(${i})">삭제</button></div><div class="lx">${esc(l.txt)}</div></div>`).join('')||'<div class="tiny" style="text-align:center;padding:25px">아직 기록이 없습니다.</div>'}</div></div></div>`}
 function chk(key,label){S.checks[key]=!S.checks[key];addLog((S.checks[key]?'✅ ':'↩️ ')+label,false);save();render();upd()}
 function now(){const d=new Date();return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
@@ -132,7 +132,7 @@ function addMemo(){const v=document.getElementById('memoIn').value.trim();if(!v)
 function delLog(i){if(!confirm('이 기록을 삭제할까요?'))return;S.logs.splice(i,1);save();render();upd()}
 function addAlarm(who){const el=document.getElementById('alarmTitle');const v=(el&&el.value.trim())||'';if(!v){alert('알림 내용을 입력해주세요');return}addLog('🔔 '+who+' 알림 추가: '+v);el.value=''}
 function quickAlarm(x){addLog('🔔 내 알림 추가: '+x)}
-function saveBuyer(){S.buyer={phone:document.getElementById('bp').value,kakao:document.getElementById('bk').value};save();addLog('최종관님 연락처 저장: '+(S.buyer.phone||'번호 미입력'));alert('저장 완료')}
+function saveBuyer(){S.buyer={phone:document.getElementById('bp').value,kakao:document.getElementById('bk').value};save();addLog('알림 알림 받을 번호 저장: '+(S.buyer.phone||'번호 미입력'));alert('저장 완료')}
 function copyAcct(){const t='007050033372';if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(()=>alert('계좌번호 복사됨: '+t)).catch(()=>prompt('계좌번호를 길게 눌러 복사하세요',t))}else{prompt('계좌번호를 길게 눌러 복사하세요',t)}}
 function allKeys(){let arr=[];Object.keys(D).forEach(g=>(D[g].pages||[]).forEach((p,pi)=>{if(p.items&&D[g].type==='check'&&p.kind!=='pay')p.items.forEach((_,i)=>arr.push(`${g}_${pi}_${i}`))}));return arr}
 function upd(){const keys=allKeys(),d=keys.filter(k=>S.checks[k]).length,t=keys.length,p=t?Math.round(d/t*100):0;fill.style.width=p+'%';hpct.textContent=p+'%';doneLbl.textContent=d+'개 완료';totalLbl.textContent='전체 '+t+'개';fdone.textContent=d;fleft.textContent=t-d;fpct.textContent=p+'%';Object.keys(D).forEach(g=>{const el=document.getElementById('cnt_'+g);if(!el)return;let ks=[];(D[g].pages||[]).forEach((p,pi)=>{if(D[g].type==='check'&&p.kind!=='pay')p.items.forEach((_,i)=>ks.push(`${g}_${pi}_${i}`))});el.textContent=ks.length?`${ks.filter(k=>S.checks[k]).length}/${ks.length}`:(g==='p6'?(S.logs||[]).length:'-')})}
@@ -525,11 +525,11 @@ drawTabs();render();upd();
 
   function getActorNameForSms(){
     try {
-      let actor = localStorage.getItem("sg2_actor_name") || "손윤주";
+      let actor = localStorage.getItem("sg2_actor_name") || "문멘토";
       localStorage.setItem("sg2_actor_name", actor);
       return actor;
     } catch(e) {
-      return "손윤주";
+      return "문멘토";
     }
   }
 
@@ -586,13 +586,14 @@ drawTabs();render();upd();
 
   function updateActorView(){
     try {
-      const actor = localStorage.getItem("sg2_actor_name") || "손윤주";
+      const actor = localStorage.getItem("sg2_actor_name") || "문멘토";
       const view = document.getElementById("currentActorView");
       if(view) view.textContent = "현재 처리자: " + actor;
 
       const mentoBtn = document.getElementById("actorMentoBtn");
       const sonBtn = document.getElementById("actorSonBtn");
       const buyerBtn = document.getElementById("actorBuyerBtn");
+      const sellerBtn = document.getElementById("actorSellerBtn");
 
       if(mentoBtn){
         mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
@@ -601,7 +602,10 @@ drawTabs();render();upd();
         sonBtn.style.background = actor === "손윤주" ? "#1a2744" : "#6b7280";
       }
       if(buyerBtn){
-        buyerBtn.style.background = actor === "최종관" ? "#1a2744" : "#6b7280";
+        buyerBtn.style.background = actor === "매수인 최종관" ? "#1a2744" : "#6b7280";
+      }
+      if(sellerBtn){
+        sellerBtn.style.background = actor === "매도인" ? "#1a2744" : "#6b7280";
       }
     } catch(e) {}
   }
@@ -629,12 +633,111 @@ drawTabs();render();upd();
   };
 
   if(!localStorage.getItem("sg2_actor_name")){
-    localStorage.setItem("sg2_actor_name", "손윤주");
+    localStorage.setItem("sg2_actor_name", "문멘토");
   }
 
   document.addEventListener("DOMContentLoaded", updateActorView);
   setTimeout(updateActorView, 500);
 
+})();
+</script>
+
+
+<script>
+(function(){
+  function currentActor(){
+    try {
+      var actor = localStorage.getItem("sg2_actor_name") || "문멘토";
+      localStorage.setItem("sg2_actor_name", actor);
+      return actor;
+    } catch(e) {
+      return "문멘토";
+    }
+  }
+
+  function updateActorView(){
+    try {
+      var actor = currentActor();
+      var view = document.getElementById("currentActorView");
+      if(view) view.textContent = "현재 처리자: " + actor;
+
+      var mentoBtn = document.getElementById("actorMentoBtn");
+      var sonBtn = document.getElementById("actorSonBtn");
+      var buyerBtn = document.getElementById("actorBuyerBtn");
+      var sellerBtn = document.getElementById("actorSellerBtn");
+
+      if(mentoBtn) mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
+      if(sonBtn) sonBtn.style.background = actor === "손윤주" ? "#1a2744" : "#6b7280";
+      if(buyerBtn) buyerBtn.style.background = actor === "매수인 최종관" ? "#1a2744" : "#6b7280";
+      if(sellerBtn) sellerBtn.style.background = actor === "매도인" ? "#1a2744" : "#6b7280";
+    } catch(e) {}
+  }
+
+  window.setChecklistActor = function(name){
+    localStorage.setItem("sg2_actor_name", name || "손윤주");
+    updateActorView();
+
+    var el = document.getElementById("syncToast");
+    if(el){
+      el.textContent = "처리자: " + (name || "손윤주");
+      el.classList.add("show");
+      setTimeout(function(){ el.classList.remove("show"); }, 1800);
+    }else{
+      alert("처리자: " + (name || "손윤주"));
+    }
+  };
+
+  window.setChecklistActorFromInput = function(){
+    var input = document.getElementById("customActorInput");
+    var v = input ? input.value.trim() : "";
+    if(!v){
+      alert("처리자 이름을 입력해주세요.");
+      return;
+    }
+    window.setChecklistActor(v);
+  };
+
+  // 기존 기록 저장 함수가 있으면, 기록 앞에 처리자를 자동으로 붙입니다.
+  if(typeof window.addLog === "function" && !window.addLog.__actorPatched){
+    var originalAddLog = window.addLog;
+    window.addLog = function(text){
+      var actor = currentActor();
+      var msg = String(text || "");
+
+      if(!msg.includes("처리자:") && !msg.startsWith(actor + " · ")){
+        msg = "처리자: " + actor + " · " + msg;
+      }
+
+      return originalAddLog.call(this, msg);
+    };
+    window.addLog.__actorPatched = true;
+  }
+
+  // 기록 저장 버튼이 textarea 값을 직접 저장하는 구조일 때도 보정합니다.
+  document.addEventListener("click", function(e){
+    var target = e.target;
+    if(!target) return;
+
+    var txt = (target.textContent || "").trim();
+    if(txt === "기록 저장"){
+      var actor = currentActor();
+      setTimeout(function(){
+        var areas = document.querySelectorAll("textarea");
+        areas.forEach(function(area){
+          if(area && area.value && !area.value.includes("처리자:") && !area.value.startsWith(actor + " · ")){
+            // 사용자가 입력 중인 원문은 건드리지 않습니다.
+          }
+        });
+      }, 10);
+    }
+  }, true);
+
+  if(!localStorage.getItem("sg2_actor_name")){
+    localStorage.setItem("sg2_actor_name", "문멘토");
+  }
+
+  document.addEventListener("DOMContentLoaded", updateActorView);
+  setTimeout(updateActorView, 500);
 })();
 </script>
 
