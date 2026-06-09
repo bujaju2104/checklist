@@ -525,14 +525,11 @@ drawTabs();render();upd();
 
   function getActorNameForSms(){
     try {
-      let actor = localStorage.getItem("sg2_actor_name") || "";
-      if(!actor){
-        actor = prompt("사용자 이름을 입력해주세요. 예) 문멘토 / 최종관", "문멘토") || "문멘토";
-        localStorage.setItem("sg2_actor_name", actor);
-      }
+      let actor = localStorage.getItem("sg2_actor_name") || "손윤주";
+      localStorage.setItem("sg2_actor_name", actor);
       return actor;
     } catch(e) {
-      return "문멘토";
+      return "손윤주";
     }
   }
 
@@ -586,6 +583,58 @@ drawTabs();render();upd();
       sendChecklistSmsToAll(title, isDone, false);
     };
   }
+
+  function updateActorView(){
+    try {
+      const actor = localStorage.getItem("sg2_actor_name") || "손윤주";
+      const view = document.getElementById("currentActorView");
+      if(view) view.textContent = "현재 처리자: " + actor;
+
+      const mentoBtn = document.getElementById("actorMentoBtn");
+      const sonBtn = document.getElementById("actorSonBtn");
+      const buyerBtn = document.getElementById("actorBuyerBtn");
+
+      if(mentoBtn){
+        mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
+      }
+      if(sonBtn){
+        sonBtn.style.background = actor === "손윤주" ? "#1a2744" : "#6b7280";
+      }
+      if(buyerBtn){
+        buyerBtn.style.background = actor === "최종관" ? "#1a2744" : "#6b7280";
+      }
+    } catch(e) {}
+  }
+
+  window.setChecklistActor = function(name){
+    localStorage.setItem("sg2_actor_name", name || "손윤주");
+    updateActorView();
+    const el = document.getElementById("syncToast");
+    if(el){
+      el.textContent = "처리자: " + (name || "손윤주");
+      el.classList.add("show");
+      setTimeout(function(){ el.classList.remove("show"); }, 1800);
+    }else{
+      alert("처리자: " + (name || "손윤주"));
+    }
+  };
+
+  window.setChecklistActorFromInput = function(){
+    const v = (document.getElementById("customActorInput")?.value || "").trim();
+    if(!v){
+      alert("처리자 이름을 입력해주세요.");
+      return;
+    }
+    window.setChecklistActor(v);
+  };
+
+  if(!localStorage.getItem("sg2_actor_name")){
+    localStorage.setItem("sg2_actor_name", "손윤주");
+  }
+
+  document.addEventListener("DOMContentLoaded", updateActorView);
+  setTimeout(updateActorView, 500);
+
 })();
 </script>
 
