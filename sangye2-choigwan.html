@@ -67,7 +67,7 @@ html,body{height:100%;overflow:hidden;font-family:'Apple SD Gothic Neo','Noto Sa
 <div class="app">
   <div class="hdr">
     <div class="hrow">
-      <div><div class="ht">📋 상계뉴타운 2구역 매매 체크리스트</div><div class="hs">매수인 최종관님 · 조합원 심재욱 157-1 · 59형 → 82.14㎡</div></div>
+      <div><div class="ht">📋 상계뉴타운 2구역 매매 체크리스트</div><div class="hs">최종관님 · 조합원 심재욱 157-1 · 59형 → 82.14㎡</div></div>
       <div><div class="pct" id="hpct">0%</div><div class="pl">진행률</div></div>
     </div>
     <div class="bar"><div class="fill" id="fill"></div></div>
@@ -81,7 +81,7 @@ html,body{height:100%;overflow:hidden;font-family:'Apple SD Gothic Neo','Noto Sa
 const KEY='sg2_no_scroll_v2';
 const D={
   p0:{name:'📊 현황',type:'info',pages:[
-    {title:'매물 핵심 정보',kind:'dark',items:[['주소','상계동 1374-13'],['조합원번호','157-1','g'],['조합원명','심재욱'],['공동명의','심재욱 · 방종복'],['신청타입','59형 (59.96㎡)','g'],['배정면적','82.14㎡','g'],['종전자산평가액','2억 3,700만원','gr'],['추정비례율','98.67%','gr'],['분양기준가액','2억 3,385만원'],['추가분담금','3억 7,699만원','r'],['매매가 / 매수인 최종관님','4억 500만원','g','full']]},
+    {title:'매물 핵심 정보',kind:'dark',items:[['주소','상계동 1374-13'],['조합원번호','157-1','g'],['조합원명','심재욱'],['공동명의','심재욱 · 방종복'],['신청타입','59형 (59.96㎡)','g'],['배정면적','82.14㎡','g'],['종전자산평가액','2억 3,700만원','gr'],['추정비례율','98.67%','gr'],['분양기준가액','2억 3,385만원'],['추가분담금','3억 7,699만원','r'],['매매가 / 최종관님','4억 500만원','g','full']]},
     {title:'📍 정비사업 진행현황',kind:'stage',items:[['done','정비구역 지정','2008.09.11','완료'],['done','추진위 승인','2009.11.30','완료'],['done','조합설립 인가','2010.05.07','완료'],['done','사업시행 인가','2021.09.01','완료'],['now','관리처분 인가','2026년 9월 예정 · 진행중','진행중'],['next','착공','미정','예정']]}
   ]},
   p1:{name:'🔍 가계약前',type:'check',pages:[
@@ -91,8 +91,8 @@ const D={
   ]},
   p2:{name:'📝 계약일',type:'check',pages:[
     {title:'💰 대금 납부 일정',color:'gold',kind:'pay',alert:'계약금 2026년 6월 11일 예정 · 총 4,000만원 중 잔여 3,000만원.',items:[['done','가계약금','26년 6월 6일 완료','1,000만원'],['now','계약금 잔여','26년 6월 11일 예정','3,000만원'],['next','중도금','만나서 협의','협의'],['next','잔금','계약 후 2~2.5개월','잔액']]},
-    {title:'✅ 매수인 최종관님 계약일 서류',color:'green',items:[['신분증','주민등록증 또는 운전면허증'],['도장','인감 또는 막도장'],['계약금 이체 준비','잔여 3,000만원 · 당일 이체한도 사전 해제','6월11일']]},
-    {title:'🤝 매도인 확인 사항',color:'navy',items:[['매도인 심재욱 신분 확인','본인 여부 · 공동명의 방종복 동석 또는 위임장'],['공동명의자 방종복 처리','동석 서명 또는 위임장+인감증명서','필수'],['조합원 지위양도 동의','조합 동의 여부 또는 특약 기재','필수'],['계약서 특약사항 기재','추가분담금 부담 주체 / 조합원 승계 일정 명시','필수'],['체납 세금 · 조합비 정산 특약','재산세·조합비·미납금은 잔금 전 매도인 정산 또는 특약 명시','필수']]},
+    {title:'✅ 최종관님 계약일 서류',color:'green',items:[['신분증','주민등록증 또는 운전면허증'],['도장','인감 또는 막도장'],['계약금 이체 준비','잔여 3,000만원 · 당일 이체한도 사전 해제','6월11일']]},
+    {title:'🤝 기타 확인 사항',color:'navy',items:[['기타 심재욱 신분 확인','본인 여부 · 공동명의 방종복 동석 또는 위임장'],['공동명의자 방종복 처리','동석 서명 또는 위임장+인감증명서','필수'],['조합원 지위양도 동의','조합 동의 여부 또는 특약 기재','필수'],['계약서 특약사항 기재','추가분담금 부담 주체 / 조합원 승계 일정 명시','필수'],['체납 세금 · 조합비 정산 특약','재산세·조합비·미납금은 잔금 전 기타 정산 또는 특약 명시','필수']]},
     {title:'🔄 대리인 계약시 추가 서류',color:'purple',items:[['대리인 신분증','대리인 진행 시'],['위임장','인감도장 날인','대리인만'],['인감증명서','최근 3개월 이내','대리인만']]}
   ]},
   p3:{name:'🏦 잔금일',type:'check',pages:[
@@ -589,22 +589,18 @@ drawTabs();render();upd();
       const view = document.getElementById("currentActorView");
       if(view) view.textContent = "현재 처리자: " + actor;
 
-      const mentoBtn = document.getElementById("actorMentoBtn");
       const sonBtn = document.getElementById("actorSonBtn");
+      const mentoBtn = document.getElementById("actorMentoBtn");
       const buyerBtn = document.getElementById("actorBuyerBtn");
-      const sellerBtn = document.getElementById("actorSellerBtn");
 
-      if(mentoBtn){
-        mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
-      }
       if(sonBtn){
         sonBtn.style.background = actor === "손윤주" ? "#1a2744" : "#6b7280";
       }
-      if(buyerBtn){
-        buyerBtn.style.background = actor === "매수인 최종관" ? "#1a2744" : "#6b7280";
+      if(mentoBtn){
+        mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
       }
-      if(sellerBtn){
-        sellerBtn.style.background = actor === "매도인" ? "#1a2744" : "#6b7280";
+      if(buyerBtn){
+        buyerBtn.style.background = actor === "최종관" ? "#1a2744" : "#6b7280";
       }
     } catch(e) {}
   }
@@ -656,7 +652,7 @@ drawTabs();render();upd();
   function requireActor(){
     var actor = getSelectedActor();
     if(!actor){
-      alert("처리자를 먼저 선택해주세요.\\n문멘토 / 손윤주 / 매수인 / 매도인 중 누가 처리하는지 선택해야 기록과 문자가 정확히 남습니다.");
+      alert("처리자를 먼저 선택해주세요.\\n문멘토 / 손윤주 / 매수인 / 기타 중 누가 처리하는지 선택해야 기록과 문자가 정확히 남습니다.");
       return "";
     }
     return actor;
@@ -675,15 +671,13 @@ drawTabs();render();upd();
       }
     }
 
-    var mentoBtn = document.getElementById("actorMentoBtn");
     var sonBtn = document.getElementById("actorSonBtn");
+    var mentoBtn = document.getElementById("actorMentoBtn");
     var buyerBtn = document.getElementById("actorBuyerBtn");
-    var sellerBtn = document.getElementById("actorSellerBtn");
 
-    if(mentoBtn) mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
     if(sonBtn) sonBtn.style.background = actor === "손윤주" ? "#1a2744" : "#6b7280";
-    if(buyerBtn) buyerBtn.style.background = actor === "매수인 최종관" ? "#1a2744" : "#6b7280";
-    if(sellerBtn) sellerBtn.style.background = actor === "매도인" ? "#1a2744" : "#6b7280";
+    if(mentoBtn) mentoBtn.style.background = actor === "문멘토" ? "#1a2744" : "#6b7280";
+    if(buyerBtn) buyerBtn.style.background = actor === "최종관" ? "#1a2744" : "#6b7280";
   }
 
   window.setChecklistActor = function(name){
