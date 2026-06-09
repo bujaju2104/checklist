@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>상계2구역 매매 체크리스트</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="manifest" href="/checklist/manifest-sangye2.json">
+<link rel="icon" href="/checklist/icon-192.png">
+<link rel="apple-touch-icon" href="/checklist/icon-192.png">
+<meta name="theme-color" content="#1a2744">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--navy:#1a2744;--navy2:#243155;--gold:#c9a84c;--goldf:#e8c96a;--green:#2d8c5e;--green-bg:#eaf6f0;--red:#c0392b;--red-bg:#fdf0ee;--orange:#d97706;--orange-bg:#fef3c7;--gray:#6b7280;--gray2:#9ca3af;--grayb:#f3f4f6;--border:#e5e7eb;--text:#1f2937;--cream:#f5f4f0;--blue:#1d4ed8;--blue-bg:#eff6ff;--purple:#6d28d9;--purple-bg:#f5f3ff}
+html,body{height:100%;overflow:hidden;font-family:'Apple SD Gothic Neo','Noto Sans KR',-apple-system,sans-serif;background:var(--cream);color:var(--text)}
+.app{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.hdr{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:10px 13px 8px;flex-shrink:0}
+.hrow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:7px}.ht{font-size:15px;font-weight:900;letter-spacing:-.4px}.hs{font-size:11px;color:var(--goldf);margin-top:2px;line-height:1.35}.pct{font-size:19px;font-weight:900;color:var(--goldf);text-align:right;line-height:1}.pl{font-size:9px;color:rgba(255,255,255,.55);text-align:right;margin-top:2px}.bar{height:5px;border-radius:9px;background:rgba(255,255,255,.15);overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--goldf));transition:.25s}.bl{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.55);margin-top:3px}
+.tabs{height:40px;background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0}.tabs::-webkit-scrollbar{display:none}.tab{height:40px;white-space:nowrap;border:0;background:#fff;padding:0 11px;font-size:12px;font-weight:800;color:var(--gray);font-family:inherit;border-bottom:3px solid transparent}.tab.on{color:var(--navy);border-bottom-color:var(--gold)}.cnt{font-size:9px;background:var(--grayb);border-radius:7px;padding:1px 5px;margin-left:2px}.tab.on .cnt{background:var(--gold);color:#fff}
+.content{flex:1;min-height:0;position:relative;overflow:hidden;padding:8px 9px 64px}.panel{display:none;height:100%;overflow:hidden}.panel.on{display:flex;flex-direction:column;gap:7px}.subnav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}.subnav::-webkit-scrollbar{display:none}.chip{border:1px solid var(--border);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;color:var(--gray);font-family:inherit;white-space:nowrap}.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;gap:7px;overflow:hidden}.card{background:#fff;border-radius:13px;box-shadow:0 1px 5px rgba(0,0,0,.08);overflow:hidden;flex-shrink:0}.card.flex{flex:1;min-height:0;display:flex;flex-direction:column}.ch{padding:9px 12px;font-size:13px;font-weight:900;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.navy{background:#eef0f6;color:var(--navy)}.green{background:var(--green-bg);color:var(--green)}.red{background:var(--red-bg);color:var(--red)}.orange{background:var(--orange-bg);color:var(--orange)}.blue{background:var(--blue-bg);color:var(--blue)}.purple{background:var(--purple-bg);color:var(--purple)}.gold{background:#fdf8ec;color:#92400e}.body{padding:9px 11px;overflow:hidden;flex:1;min-height:0}.dark{background:var(--navy);border-radius:13px;padding:11px;box-shadow:0 1px 5px rgba(0,0,0,.08)}.darktitle{font-size:13px;color:var(--goldf);font-weight:900;margin-bottom:7px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.info{background:rgba(255,255,255,.08);border-radius:8px;padding:7px}.info.full{grid-column:1/-1}.il{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:1px}.iv{font-size:13px;font-weight:800;color:#fff}.iv.g{color:var(--goldf)}.iv.r{color:#fca5a5}.iv.gr{color:#6ee7b7}.alert{background:#fff8e6;border:1px solid #f5d064;color:#92400e;border-radius:10px;padding:9px 10px;font-size:12px;line-height:1.45;flex-shrink:0}.ci{display:flex;gap:8px;align-items:flex-start;padding:9px 2px;border-bottom:1px solid var(--border);cursor:pointer}.ci:last-child{border-bottom:0}.box{width:19px;height:19px;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}.ci.done .box{background:var(--green);border-color:var(--green)}.tick{display:none;color:#fff;font-size:11px}.ci.done .tick{display:block}.main{font-size:14px;font-weight:800;line-height:1.35;color:var(--text)}.ci.done .main{color:var(--text);text-decoration:none}.sub{font-size:12px;color:var(--gray2);line-height:1.35;margin-top:2px}.tag{display:inline-block;font-size:9px;font-weight:900;border-radius:999px;padding:1px 5px;margin-top:2px;background:var(--red-bg);color:var(--red)}.tag.o{background:var(--orange-bg);color:var(--orange)}.tag.b{background:var(--blue-bg);color:var(--blue)}.tag.g{background:var(--green-bg);color:var(--green)}.tag.gray{background:var(--grayb);color:var(--gray)}
+.stage{display:flex;align-items:center;gap:9px;padding:8px 2px;border-bottom:1px solid var(--border)}.stage:last-child{border-bottom:0}.sico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}.sico.done{background:var(--green-bg)}.sico.now{background:var(--orange-bg)}.sico.next{background:var(--grayb)}.sinfo{flex:1}.sn{font-size:14px;font-weight:900}.sd{font-size:12px;color:var(--gray2);margin-top:1px}.badge{font-size:8px;border-radius:999px;padding:2px 6px;font-weight:900}.badge.done{background:var(--green-bg);color:var(--green)}.badge.now{background:var(--orange-bg);color:var(--orange)}.badge.next{background:var(--grayb);color:var(--gray)}
+.pay{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px solid var(--border)}.pay:last-child{border-bottom:0}.dot{width:9px;height:9px;border-radius:50%;background:var(--border);flex-shrink:0}.dot.done{background:var(--green)}.dot.now{background:var(--orange)}.pa{font-size:14px;font-weight:900;color:var(--navy)}.acct{background:var(--navy);border-radius:9px;padding:9px 11px;margin-top:7px}.al{font-size:9px;color:var(--goldf);font-weight:900}.anum{font-size:16px;font-weight:900;color:#fff;letter-spacing:.8px;margin-top:2px}.copy{margin-top:5px;background:var(--gold);color:var(--navy);border:0;border-radius:7px;padding:4px 9px;font-size:10px;font-weight:900;font-family:inherit}
+.actions{display:flex;gap:6px;flex-shrink:0}.navbtn{flex:1;border:0;border-radius:10px;background:var(--navy);color:#fff;font-size:12px;font-weight:900;padding:9px;font-family:inherit}.navbtn.subtle{background:#fff;color:var(--navy);border:1px solid var(--border)}.navbtn:disabled{background:var(--grayb);color:var(--gray2)}
+.fbar{position:fixed;left:9px;right:9px;bottom:9px;height:50px;background:var(--navy);border-radius:14px;box-shadow:0 5px 22px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:space-around;z-index:50}.fs{text-align:center;min-width:52px}.fn{display:block;font-size:15px;font-weight:900;color:var(--goldf);line-height:1}.fl{font-size:8px;color:rgba(255,255,255,.5)}.div{width:1px;height:25px;background:rgba(255,255,255,.14)}
+.inp,.memo{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:9px;font-family:inherit;font-size:13px;outline:none}.memo{height:78px;resize:none}.save{width:100%;background:var(--navy);color:#fff;border:0;border-radius:9px;padding:9px;font-size:13px;font-weight:900;font-family:inherit;margin-top:7px}.log{padding:7px 0;border-bottom:1px solid var(--border)}.log:last-child{border-bottom:0}.lt{font-size:10px;color:var(--gray2);display:flex;justify-content:space-between;align-items:center;gap:8px}.lx{font-size:13px;line-height:1.35;margin-top:2px}.tiny{font-size:9px;color:var(--gray2)}.del{border:0;background:var(--red-bg);color:var(--red);border-radius:7px;padding:2px 6px;font-size:10px;font-weight:900;font-family:inherit}.minirow{display:flex;gap:6px;margin-top:7px}.minirow .save{margin-top:0;flex:1}
+@media(max-height:720px){.ci{padding:7px 2px}.main,.sn,.pa{font-size:13px}.sub,.sd{font-size:11px}.body{padding:8px 10px}.content{padding-top:6px}.dark{padding:9px}.info{padding:6px}.hdr{padding-top:8px}.tabs{height:37px}.tab{height:37px}}
+
+.office-footer{
+  position:fixed;
+  left:10px;
+  right:10px;
+  bottom:64px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:8px 10px;
+  text-align:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  z-index:250;
+}
+.office-footer .of-name{font-size:12px;font-weight:900;color:#1a2744;}
+.office-footer .of-tel{font-size:11px;font-weight:800;color:#6b7280;margin-top:2px;}
+@media(max-height:720px){
+  .office-footer{bottom:59px;padding:6px 8px}
+  .office-footer .of-name{font-size:11px}
+  .office-footer .of-tel{font-size:10px}
+}
+
+
+.sync-toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#1a2744;color:#fff;border-radius:12px;padding:10px 14px;font-size:12px;font-weight:800;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:9999;opacity:0;pointer-events:none;transition:.25s}.sync-toast.show{opacity:1}.sync-badge{position:fixed;right:10px;bottom:122px;background:#eaf6f0;color:#2d8c5e;border:1px solid #bfe7d0;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;z-index:260;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+
+</style>
+</head>
+<body>
+<div class="sync-toast" id="syncToast"></div>
+<div class="sync-badge" id="syncBadge">실시간 연동 준비중</div>
+<div class="app">
+  <div class="hdr">
+    <div class="hrow">
+      <div><div class="ht">📋 상계뉴타운 2구역 매매 체크리스트</div><div class="hs">매수인 최종관님 · 조합원 심재욱 157-1 · 59형 → 82.14㎡</div></div>
+      <div><div class="pct" id="hpct">0%</div><div class="pl">진행률</div></div>
+    </div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="bl"><span id="doneLbl">0개 완료</span><span id="totalLbl">전체 0개</span></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="content" id="content"></div>
+</div>
+<div class="office-footer">
+  <div class="of-name">문멘토공인중개사사무소</div>
+  <div class="of-tel">010.6336.1828&nbsp;&nbsp;|&nbsp;&nbsp;010.4336.5038</div>
+</div>
+
+<div class="fbar"><div class="fs"><span class="fn" id="fdone">0</span><span class="fl">완료</span></div><div class="div"></div><div class="fs"><span class="fn" id="fleft">0</span><span class="fl">남은항목</span></div><div class="div"></div><div class="fs"><span class="fn" id="fpct">0%</span><span class="fl">진행률</span></div><div class="div"></div><div class="fs"><span class="fn" style="font-size:13px">4.05억</span><span class="fl">매매가</span></div></div>
+<script>
+const KEY='sg2_no_scroll_v2';
+const D={
+  p0:{name:'📊 현황',type:'info',pages:[
+    {title:'매물 핵심 정보',kind:'dark',items:[['주소','상계동 1374-13'],['조합원번호','157-1','g'],['조합원명','심재욱'],['공동명의','심재욱 · 방종복'],['신청타입','59형 (59.96㎡)','g'],['배정면적','82.14㎡','g'],['종전자산평가액','2억 3,700만원','gr'],['추정비례율','98.67%','gr'],['분양기준가액','2억 3,385만원'],['추가분담금','3억 7,699만원','r'],['매매가 / 매수인 최종관님','4억 500만원','g','full']]},
+    {title:'📍 정비사업 진행현황',kind:'stage',items:[['done','정비구역 지정','2008.09.11','완료'],['done','추진위 승인','2009.11.30','완료'],['done','조합설립 인가','2010.05.07','완료'],['done','사업시행 인가','2021.09.01','완료'],['now','관리처분 인가','2026년 9월 예정 · 진행중','진행중'],['next','착공','미정','예정']]}
+  ]},
+  p1:{name:'🔍 가계약前',type:'check',pages:[
+    {title:'⚠️ 조합원 권리 검증',color:'red',alert:'가계약금 1,000만원 2026년 6월 6일 입금 완료. 계약 전 권리검증 우선.',items:[['가계약금 입금 완료 확인','1,000만원 · 2026년 6월 6일 · 국민 007050033372 심재욱 계좌 입금 완료','입금완료'],['조합원 자격 확인','157-1 / 심재욱 명의 적법성 조합 직접 확인'],['다물권자 여부 확인','심재욱·방종복 명의 타 부동산 보유 현황 확인','필수'],['조합원 지위 양도 가능 여부','관리처분인가 전 양도 가능 여부 조합 서면 확인','필수'],['공동명의자 방종복 동의 확인','양 당사자 동의 및 인감증명서 필수','필수']]},
+    {title:'📊 감정평가 · 배정 확인',color:'orange',items:[['감정평가액 서류 대조','종전자산 237,000,000원 공식 감정평가서 확인'],['평형 배정 결과 확인','59형 → 82.14㎡ 배정 / 권리가액대응순'],['추가분담금 및 변동 리스크 안내','376,986,301원 · 비례율 확정 전 변동 가능성 최종관님께 설명','리스크']]},
+    {title:'📄 서류 사전 확인',color:'blue',items:[['건축물대장 확인','상계동 1374-13 · 위반건축물 여부'],['등기부등본 열람','근저당·압류·가등기·가처분 권리관계 이상 여부','필수'],]}
+  ]},
+  p2:{name:'📝 계약일',type:'check',pages:[
+    {title:'💰 대금 납부 일정',color:'gold',kind:'pay',alert:'계약금 2026년 6월 11일 예정 · 총 4,000만원 중 잔여 3,000만원.',items:[['done','가계약금','26년 6월 6일 완료','1,000만원'],['now','계약금 잔여','26년 6월 11일 예정','3,000만원'],['next','중도금','만나서 협의','협의'],['next','잔금','계약 후 2~2.5개월','잔액']]},
+    {title:'✅ 매수인 최종관님 계약일 서류',color:'green',items:[['신분증','주민등록증 또는 운전면허증'],['도장','인감 또는 막도장'],['계약금 이체 준비','잔여 3,000만원 · 당일 이체한도 사전 해제','6월11일']]},
+    {title:'🤝 매도인 확인 사항',color:'navy',items:[['매도인 심재욱 신분 확인','본인 여부 · 공동명의 방종복 동석 또는 위임장'],['공동명의자 방종복 처리','동석 서명 또는 위임장+인감증명서','필수'],['조합원 지위양도 동의','조합 동의 여부 또는 특약 기재','필수'],['계약서 특약사항 기재','추가분담금 부담 주체 / 조합원 승계 일정 명시','필수'],['체납 세금 · 조합비 정산 특약','재산세·조합비·미납금은 잔금 전 매도인 정산 또는 특약 명시','필수']]},
+    {title:'🔄 대리인 계약시 추가 서류',color:'purple',items:[['대리인 신분증','대리인 진행 시'],['위임장','인감도장 날인','대리인만'],['인감증명서','최근 3개월 이내','대리인만']]}
+  ]},
+  p3:{name:'🏦 잔금일',type:'check',pages:[
+    {title:'✅ 최종관님 잔금일 준비 서류',color:'green',alert:'잔금일은 조합원 승계 작업과 동시에 진행. 서류는 최소 D-7 전에 확인.',items:[['신분증',''],['매매계약서 원본',''],['도장','인감 또는 막도장'],['주민등록초본','주소변동 전부기재 · 조합원 승계 필수','필수'],['주민등록등본','가족 전원'],['가족관계증명서','주민번호 전체 표기','필수']]},
+    {title:'📋 조합원 승계 절차',color:'red',items:[['등기부등본 최종 열람','잔금 직전 당일 발급 · 권리 이상 재확인','잔금직전'],['잔금 지급 및 영수증 수령',''],['조합 사무소 방문 예약','당일 또는 익일 · 명의변경 신청'],['조합원 지위 양도·양수 신고서 제출','157-1 → 최종관님 명의 변경','필수'],['승계 완료 확인서 수령','조합 발행 공문 · 최종관님 보관']]},
+    {title:'🔄 잔금일 대리인 서류',color:'purple',items:[['대리인 신분증',''],['위임장','인감도장 날인','대리인만'],['최종관님 인감증명서','최근 3개월','대리인만']]}
+  ]},
+  p4:{name:'🏗 사업추적',type:'check',pages:[
+    {title:'🚚 이주 단계 기록',color:'orange',alert:'이주부터 착공까지는 꼭 별도 기록하는 게 좋습니다. 분쟁·일정 지연·자금계획 확인에 필요합니다.',items:[['이주 개시 공문 확인','조합 공문 날짜와 이주기간 기록','필수'],['이주비 대출 조건 확인','금리·한도·보증·승계 여부'],['명도 일정 확인','세입자·점유자 여부 및 명도 완료일'],['이주 완료율 기록','조합 안내 기준으로 월 1회 기록']]},
+    {title:'🧱 철거 단계 기록',color:'red',items:[['철거 신고 및 착수일 확인','철거업체·현장 공지 확인'],['석면조사 및 해체 일정 확인','석면 관련 공고·완료 여부'],['철거 완료일 기록','사진·공문·조합 안내 캡처 보관'],['민원·소송·보상 이슈 확인','착공 지연 가능성 체크']]},
+    {title:'🏗 착공 전 기록',color:'blue',items:[['관리처분인가 고시일 확인','고시문 저장 · 권리 변동 기준일 체크','필수'],['이주·철거 완료 여부 확인','착공 전 필수 선행조건'],['시공사 본계약·공사비 확인','공사비 증액 여부 및 분담금 영향'],['착공 신고일 기록','착공신고필증 또는 조합 안내 확인','필수'],['추가분담금 변동 재확인','최종관님 자금계획 재점검','중요']]}
+  ]},
+  p5:{name:'🔔 알림',type:'form'},
+  p6:{name:'📁 기록',type:'log'}
+};
+let S=JSON.parse(localStorage.getItem(KEY)||'{"checks":{},"page":{},"logs":[],"buyer":{}}');
+let cur='p0';
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(x){return String(x||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function drawTabs(){tabs.innerHTML=Object.keys(D).map(k=>`<button class="tab ${k===cur?'on':''}" onclick="openTab('${k}')">${D[k].name} <span class="cnt" id="cnt_${k}">-</span></button>`).join('')}
+function openTab(k){cur=k;drawTabs();render();upd()}
+function setPage(i){S.page[cur]=i;save();render();upd()}
+function currentPage(){return S.page[cur]||0}
+function render(){const d=D[cur];let html=`<div class="panel on">`;
+ if(d.pages){let pi=currentPage();const p=d.pages[pi];html+=`<div class="subnav">${d.pages.map((x,i)=>`<button class="chip ${i===pi?'on':''}" onclick="setPage(${i})">${i+1}. ${x.title.replace(/[📊⚠️📄💰✅🤝🔄📋🚚🧱🏗📍]/g,'').trim()}</button>`).join('')}</div><div class="screen">`;if(p.alert)html+=`<div class="alert">${esc(p.alert)}</div>`;html+=renderPage(p,cur,pi);html+=`<div class="actions"><button class="navbtn subtle" onclick="setPage(${pi-1})" ${pi===0?'disabled':''}>← 이전</button><button class="navbtn" onclick="setPage(${pi+1})" ${pi===d.pages.length-1?'disabled':''}>다음 →</button></div></div>`}
+ else if(d.type==='form')html+=renderForm(); else html+=renderLog(); html+=`</div>`;content.innerHTML=html}
+function renderPage(p,g,pi){if(p.kind==='dark')return `<div class="dark"><div class="darktitle">${p.title}</div><div class="grid">${p.items.map(it=>`<div class="info ${it[3]==='full'?'full':''}"><div class="il">${esc(it[0])}</div><div class="iv ${it[2]||''}">${esc(it[1])}</div></div>`).join('')}</div></div>`;
+ if(p.kind==='stage')return `<div class="card flex"><div class="ch navy">${p.title}<span class="tiny">스크롤 없음</span></div><div class="body">${p.items.map(it=>`<div class="stage"><div class="sico ${it[0]}">${it[0]==='done'?'✅':it[0]==='now'?'⏳':'🏗'}</div><div class="sinfo"><div class="sn">${esc(it[1])}</div><div class="sd">${esc(it[2])}</div></div><span class="badge ${it[0]}">${esc(it[3])}</span></div>`).join('')}</div></div>`;
+ if(p.kind==='pay')return `<div class="card flex"><div class="ch ${p.color}">${p.title}</div><div class="body">${p.items.map(it=>`<div class="pay"><span class="dot ${it[0]}"></span><div style="flex:1"><div class="main">${esc(it[1])}</div><div class="sub">${esc(it[2])}</div></div><div class="pa">${esc(it[3])}</div></div>`).join('')}<div class="acct"><div class="al">매도자 계좌 · 국민은행</div><div class="anum">007050033372</div><div class="sub" style="color:rgba(255,255,255,.55)">예금주: 심재욱</div><button class="copy" onclick="copyAcct()">📋 복사</button></div></div></div>`;
+ return `<div class="card flex"><div class="ch ${p.color||'navy'}">${p.title}<span class="tiny">${pi+1}/${D[g].pages.length}</span></div><div class="body">${p.items.map((it,i)=>{const key=`${g}_${pi}_${i}`,on=S.checks[key];return `<div class="ci ${on?'done':''}" onclick="chk('${key}','${esc(it[0])}')"><div class="box"><span class="tick">✓</span></div><div><div class="main">${esc(it[0])}</div>${it[1]?`<div class="sub">${esc(it[1])}</div>`:''}${it[2]?`<span class="tag ${it[2].includes('필수')?'':it[2].includes('리스크')||it[2].includes('중요')?'o':'gray'}">${esc(it[2])}</span>`:''}</div></div>`}).join('')}</div></div>`}
+function renderForm(){return `<div class="screen"><div class="card flex"><div class="ch blue">📱 알림 설정 / 추가</div><div class="body"><div class="alert" style="margin-bottom:8px">현재 파일은 내 휴대폰 안에 저장되는 방식입니다. 체크하거나 추가한 알림은 기록에 남고, 실제 문자·카카오 자동발송은 서버 연동 후 가능합니다.</div><div class="main" style="margin-bottom:4px">최종관님 휴대폰</div><input class="inp" id="bp" value="${esc(S.buyer.phone||'')}" placeholder="010-0000-0000"><div class="main" style="margin:8px 0 4px">카카오톡 ID 선택</div><input class="inp" id="bk" value="${esc(S.buyer.kakao||'')}" placeholder="카카오톡 ID"><button class="save" onclick="saveBuyer()">💾 연락처 저장</button><div style="height:10px"></div><div class="main" style="margin-bottom:4px">알림 직접 추가</div><input class="inp" id="alarmTitle" placeholder="예: 잔금 D-7 서류 확인"><div class="minirow"><button class="save" onclick="addAlarm('나')">내 알림 추가</button><button class="save" onclick="addAlarm('최종관님')">최종관님 알림 추가</button></div><div style="height:8px"></div>${['계약금 D-1','계약금 당일','관리처분인가 예정','잔금 D-7','잔금 D-1','승계 완료'].map(x=>`<div class="pay" onclick="quickAlarm('${x}')"><span class="dot now"></span><div style="flex:1"><div class="main">${x} 알림</div><div class="sub">누르면 내 알림 기록에 추가됩니다</div></div><span class="badge now">추가</span></div>`).join('')}</div></div></div>`}
+function renderLog(){return `<div class="screen"><div class="card"><div class="ch navy">✍️ 메모 추가</div><div class="body"><textarea class="memo" id="memoIn" placeholder="통화 내용, 진행 사항, 특이사항 입력"></textarea><button class="save" onclick="addMemo()">기록 저장</button></div></div><div class="card flex"><div class="ch navy">📁 최근 진행 기록 <span class="tiny">최근 5개 표시 · 삭제 가능</span></div><div class="body" id="logs">${(S.logs||[]).slice(0,5).map((l,i)=>`<div class="log"><div class="lt"><span>${esc(l.ts)}</span><button class="del" onclick="delLog(${i})">삭제</button></div><div class="lx">${esc(l.txt)}</div></div>`).join('')||'<div class="tiny" style="text-align:center;padding:25px">아직 기록이 없습니다.</div>'}</div></div></div>`}
+function chk(key,label){S.checks[key]=!S.checks[key];addLog((S.checks[key]?'✅ ':'↩️ ')+label,false);save();render();upd()}
+function now(){const d=new Date();return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function addLog(txt,rer=true){S.logs.unshift({ts:now(),txt});if(S.logs.length>200)S.logs.pop();save();if(rer)render();upd()}
+function addMemo(){const v=document.getElementById('memoIn').value.trim();if(!v)return;addLog(v)}
+function delLog(i){if(!confirm('이 기록을 삭제할까요?'))return;S.logs.splice(i,1);save();render();upd()}
+function addAlarm(who){const el=document.getElementById('alarmTitle');const v=(el&&el.value.trim())||'';if(!v){alert('알림 내용을 입력해주세요');return}addLog('🔔 '+who+' 알림 추가: '+v);el.value=''}
+function quickAlarm(x){addLog('🔔 내 알림 추가: '+x)}
+function saveBuyer(){S.buyer={phone:document.getElementById('bp').value,kakao:document.getElementById('bk').value};save();addLog('최종관님 연락처 저장: '+(S.buyer.phone||'번호 미입력'));alert('저장 완료')}
+function copyAcct(){const t='007050033372';if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(()=>alert('계좌번호 복사됨: '+t)).catch(()=>prompt('계좌번호를 길게 눌러 복사하세요',t))}else{prompt('계좌번호를 길게 눌러 복사하세요',t)}}
+function allKeys(){let arr=[];Object.keys(D).forEach(g=>(D[g].pages||[]).forEach((p,pi)=>{if(p.items&&D[g].type==='check'&&p.kind!=='pay')p.items.forEach((_,i)=>arr.push(`${g}_${pi}_${i}`))}));return arr}
+function upd(){const keys=allKeys(),d=keys.filter(k=>S.checks[k]).length,t=keys.length,p=t?Math.round(d/t*100):0;fill.style.width=p+'%';hpct.textContent=p+'%';doneLbl.textContent=d+'개 완료';totalLbl.textContent='전체 '+t+'개';fdone.textContent=d;fleft.textContent=t-d;fpct.textContent=p+'%';Object.keys(D).forEach(g=>{const el=document.getElementById('cnt_'+g);if(!el)return;let ks=[];(D[g].pages||[]).forEach((p,pi)=>{if(D[g].type==='check'&&p.kind!=='pay')p.items.forEach((_,i)=>ks.push(`${g}_${pi}_${i}`))});el.textContent=ks.length?`${ks.filter(k=>S.checks[k]).length}/${ks.length}`:(g==='p6'?(S.logs||[]).length:'-')})}
+if(!S.logs.length){addLog('✅ 가계약금 1,000만원 입금 완료 (2026.06.06) — 국민 007050033372 심재욱',false)}
+drawTabs();render();upd();
+</script>
+
+
+<script>
+(function(){
+  const SUPABASE_URL='https://bjmanwqmoeobkpxehfpm.supabase.co';
+  const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA';
+  const PAGE_ID='sangye2-choigwan';
+  const CLIENT_ID=sessionStorage.getItem('sg2_client_id') || (Date.now()+'_'+Math.random().toString(36).slice(2));
+  sessionStorage.setItem('sg2_client_id', CLIENT_ID);
+  let actor=localStorage.getItem('sg2_actor_name') || '';
+  let suppressPush=false;
+  let booted=false;
+  let client=null;
+
+  function badge(txt){const el=document.getElementById('syncBadge'); if(el) el.textContent=txt;}
+  function toast(txt){const el=document.getElementById('syncToast'); if(!el)return; el.textContent=txt; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2600);}
+  function safeNow(){try{return new Date().toLocaleString('ko-KR')}catch(e){return ''}}
+  function askActor(){
+    if(actor) return;
+    setTimeout(()=>{
+      const v=prompt('체크리스트 사용자 이름을 입력해주세요. 예: 문멘토 / 최종관', '문멘토');
+      actor=(v&&v.trim())?v.trim():'문멘토';
+      localStorage.setItem('sg2_actor_name', actor);
+      toast('작성자: '+actor);
+      requestNotify();
+    },500);
+  }
+  async function requestNotify(){
+    if(!('Notification' in window)) return;
+    if(Notification.permission==='default'){
+      try{ await Notification.requestPermission(); }catch(e){}
+    }
+  }
+  function notify(title, body){
+    toast(body || title);
+    if('Notification' in window && Notification.permission==='granted'){
+      try{ new Notification(title, {body: body || '', icon:'/checklist/icon-192.png'}); }catch(e){}
+    }
+  }
+  function getPayload(){
+    return Object.assign({}, S, {
+      __sync:{client_id:CLIENT_ID, actor:actor||'문멘토', at:new Date().toISOString()}
+    });
+  }
+  async function pushState(){
+    if(!booted || suppressPush || !client) return;
+    try{
+      const payload=getPayload();
+      const {error}=await client.from('checklist_pages').upsert({page_id:PAGE_ID,data:payload,updated_at:new Date().toISOString()});
+      if(error){console.error(error); badge('실시간 연동 오류');}
+      else badge('실시간 연동중');
+    }catch(e){console.error(e); badge('실시간 연동 오류');}
+  }
+  function wrap(name){
+    const original=window[name];
+    if(typeof original!=='function') return;
+    window[name]=function(){
+      const result=original.apply(this, arguments);
+      setTimeout(pushState,60);
+      return result;
+    };
+  }
+  async function init(){
+    if(!window.supabase){badge('Supabase 로드 실패'); return;}
+    askActor();
+    client=window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    badge('실시간 연결중...');
+    try{
+      const {data,error}=await client.from('checklist_pages').select('*').eq('page_id', PAGE_ID).maybeSingle();
+      if(error){console.error(error); badge('실시간 연동 오류');}
+      else if(data && data.data){
+        suppressPush=true;
+        S=Object.assign({checks:{},page:{},logs:[],buyer:{}}, data.data);
+        localStorage.setItem(KEY, JSON.stringify(S));
+        try{drawTabs(); render(); upd();}catch(e){console.error(e)}
+        suppressPush=false;
+      } else {
+        await client.from('checklist_pages').insert({page_id:PAGE_ID,data:getPayload()});
+      }
+      booted=true;
+      ['save','chk','addLog','addMemo','delLog','addAlarm','quickAlarm','saveBuyer','setPage','openTab'].forEach(wrap);
+      await pushState();
+      client.channel('sg2_checklist_page')
+        .on('postgres_changes',{event:'UPDATE',schema:'public',table:'checklist_pages',filter:'page_id=eq.'+PAGE_ID}, payload=>{
+          const remote=payload.new && payload.new.data ? payload.new.data : null;
+          if(!remote) return;
+          const meta=remote.__sync || {};
+          if(meta.client_id===CLIENT_ID) return;
+          suppressPush=true;
+          S=Object.assign({checks:{},page:{},logs:[],buyer:{}}, remote);
+          localStorage.setItem(KEY, JSON.stringify(S));
+          try{drawTabs(); render(); upd();}catch(e){console.error(e)}
+          suppressPush=false;
+          const who=meta.actor || '상대방';
+          notify('상계2구역 체크리스트', who+'님이 체크리스트를 업데이트했습니다.');
+        })
+        .subscribe(status=>{badge(status==='SUBSCRIBED'?'실시간 연동중':'실시간 연결중...')});
+      badge('실시간 연동중');
+    }catch(e){console.error(e); badge('실시간 연동 오류');}
+  }
+  window.addEventListener('load', init);
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/checklist/sw-sangye2.js', { scope: '/checklist/' })
+      .catch(function (err) { console.log('ServiceWorker registration failed:', err); });
+  });
+}
+</script>
+
+</body>
+</html>
