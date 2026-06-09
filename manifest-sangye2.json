@@ -1,0 +1,21 @@
+{
+  "name": "상계2구역 매매 체크리스트",
+  "short_name": "상계2체크",
+  "start_url": "/checklist/sangye2-choigwan.html",
+  "scope": "/checklist/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "/checklist/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/checklist/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
