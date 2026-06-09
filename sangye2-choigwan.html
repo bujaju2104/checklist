@@ -282,17 +282,24 @@ drawTabs();render();upd();
 
 
 
+
+
+
 <script>
 (function(){
   const PAGE_ID_SMS = "sangye2-choigwan";
   const SUPABASE_URL_SMS = "https://bjmanwqmoeobkpxehfpm.supabase.co";
   const SUPABASE_ANON_KEY_SMS = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA";
   const SEND_SMS_FUNCTION_URL = SUPABASE_URL_SMS + "/functions/v1/send-checklist-sms";
-  const sbSms = window.supabase ? window.supabase.createClient(SUPABASE_URL_SMS, SUPABASE_ANON_KEY_SMS) : null;
+  const MANAGE_SMS_FUNCTION_URL = SUPABASE_URL_SMS + "/functions/v1/manage-sms-settings";
   let lastSmsAt = 0;
 
   function cleanPhone(v){
     return String(v || "").replace(/[^0-9]/g, "");
+  }
+
+  function getAdminPin(){
+    return sessionStorage.getItem("sg2_admin_pin") || "";
   }
 
   function smsToast(msg){
@@ -306,91 +313,117 @@ drawTabs();render();upd();
     }
   }
 
-  function getActorNameForSms(){
-    try {
-      let actor = localStorage.getItem("sg2_actor_name") || "";
-      if(!actor){
-        actor = prompt("사용자 이름을 입력해주세요. 예) 문멘토 / 최종관", "문멘토") || "문멘토";
-        localStorage.setItem("sg2_actor_name", actor);
-      }
-      return actor;
-    } catch(e) {
-      return "문멘토";
+  async function manageSms(action, payload){
+    const res = await fetch(MANAGE_SMS_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY_SMS,
+        "apikey": SUPABASE_ANON_KEY_SMS
+      },
+      body: JSON.stringify(Object.assign({
+        action,
+        pin: getAdminPin(),
+        pageId: PAGE_ID_SMS
+      }, payload || {}))
+    });
+
+    const data = await res.json().catch(function(){ return {}; });
+
+    if(!res.ok || data.ok === false){
+      throw new Error(data.error || "관리자 기능 오류");
     }
+
+    return data;
   }
+
+  window.unlockSmsAdmin = async function(){
+    const pin = (document.getElementById("adminPinInput")?.value || "").trim();
+
+    if(!pin){
+      alert("관리자 PIN을 입력해주세요.");
+      return;
+    }
+
+    sessionStorage.setItem("sg2_admin_pin", pin);
+
+    try {
+      await manageSms("list", {});
+      document.getElementById("adminLoginCard").style.display = "none";
+      document.getElementById("smsAdminArea").style.display = "block";
+      smsToast("관리자 알림 설정 열림");
+      loadSmsContacts();
+      loadSmsSchedules();
+    } catch(e) {
+      sessionStorage.removeItem("sg2_admin_pin");
+      alert("관리자 PIN이 맞지 않습니다.");
+    }
+  };
 
   async function loadSmsContacts(){
     const box = document.getElementById("smsContactList");
-    if(!box || !sbSms) return;
-    const { data, error } = await sbSms
-      .from("sms_contacts")
-      .select("id,name,phone,enabled,created_at")
-      .eq("page_id", PAGE_ID_SMS)
-      .order("created_at", { ascending: true });
+    if(!box || !getAdminPin()) return;
 
-    if(error){
-      box.innerHTML = '<div class="empty-state">연락처 불러오기 오류: '+ error.message +'</div>';
-      return;
+    try {
+      const data = await manageSms("list", {});
+      const contacts = data.contacts || [];
+
+      if(!contacts.length){
+        box.innerHTML = '<div class="empty-state">아직 저장된 문자 수신자가 없습니다.</div>';
+        return;
+      }
+
+      box.innerHTML = contacts.map(function(c){
+        return `
+          <div class="ntf">
+            <div class="ntf-ico sms">&#128241;</div>
+            <div class="ntf-info">
+              <div class="ntf-title">${c.name || '이름 없음'}</div>
+              <div class="ntf-desc">${c.phone}</div>
+            </div>
+            <button class="copy-btn" style="margin-top:0;background:#f3f4f6;color:#6b7280" onclick="deleteSmsContact('${c.id}')">삭제</button>
+          </div>
+        `;
+      }).join('');
+    } catch(e) {
+      box.innerHTML = '<div class="empty-state">관리자 인증 후 확인 가능합니다.</div>';
     }
-
-    if(!data || !data.length){
-      box.innerHTML = '<div class="empty-state">아직 저장된 문자 수신자가 없습니다.</div>';
-      return;
-    }
-
-    box.innerHTML = data.map(c => `
-      <div class="ntf">
-        <div class="ntf-ico sms">&#128241;</div>
-        <div class="ntf-info">
-          <div class="ntf-title">${c.name || '이름 없음'}</div>
-          <div class="ntf-desc">${c.phone}</div>
-        </div>
-        <button class="copy-btn" style="margin-top:0;background:#f3f4f6;color:#6b7280" onclick="deleteSmsContact('${c.id}')">삭제</button>
-      </div>
-    `).join('');
   }
 
   async function loadSmsSchedules(){
     const box = document.getElementById("smsScheduleList");
-    if(!box || !sbSms) return;
-    const { data, error } = await sbSms
-      .from("sms_schedules")
-      .select("id,title,due_at,sent_at,status,created_at")
-      .eq("page_id", PAGE_ID_SMS)
-      .order("due_at", { ascending: true });
+    if(!box || !getAdminPin()) return;
 
-    if(error){
-      box.innerHTML = '<div class="empty-state">예약 목록 오류: '+ error.message +'</div>';
-      return;
-    }
+    try {
+      const data = await manageSms("list", {});
+      const schedules = data.schedules || [];
 
-    if(!data || !data.length){
-      box.innerHTML = '<div class="empty-state">아직 예약된 문자가 없습니다.</div>';
-      return;
-    }
+      if(!schedules.length){
+        box.innerHTML = '<div class="empty-state">아직 예약된 문자가 없습니다.</div>';
+        return;
+      }
 
-    box.innerHTML = data.map(s => {
-      const due = new Date(s.due_at);
-      const kst = due.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-      const badge = s.sent_at ? "발송완료" : (s.status || "예약중");
-      return `
-        <div class="ntf">
-          <div class="ntf-ico kkt">&#9200;</div>
-          <div class="ntf-info">
-            <div class="ntf-title">${s.title}</div>
-            <div class="ntf-desc">${kst} · ${badge}</div>
+      box.innerHTML = schedules.map(function(s){
+        const due = new Date(s.due_at);
+        const kst = due.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+        const badge = s.sent_at ? "발송완료" : (s.status || "예약중");
+        return `
+          <div class="ntf">
+            <div class="ntf-ico kkt">&#9200;</div>
+            <div class="ntf-info">
+              <div class="ntf-title">${s.title}</div>
+              <div class="ntf-desc">${kst} · ${badge}</div>
+            </div>
+            <button class="copy-btn" style="margin-top:0;background:#f3f4f6;color:#6b7280" onclick="deleteSmsSchedule('${s.id}')">삭제</button>
           </div>
-          <button class="copy-btn" style="margin-top:0;background:#f3f4f6;color:#6b7280" onclick="deleteSmsSchedule('${s.id}')">삭제</button>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
+    } catch(e) {
+      box.innerHTML = '<div class="empty-state">관리자 인증 후 확인 가능합니다.</div>';
+    }
   }
 
   window.saveSmsContact = async function(){
-    if(!sbSms){
-      alert("Supabase 연결을 확인해주세요.");
-      return;
-    }
     const name = (document.getElementById("smsName")?.value || "").trim();
     const phone = cleanPhone(document.getElementById("smsPhone")?.value || "");
 
@@ -403,36 +436,28 @@ drawTabs();render();upd();
       return;
     }
 
-    const { error } = await sbSms
-      .from("sms_contacts")
-      .upsert({
-        page_id: PAGE_ID_SMS,
-        name,
-        phone,
-        enabled: true
-      }, { onConflict: "page_id,phone" });
-
-    if(error){
-      alert("저장 오류: " + error.message);
-      return;
+    try {
+      await manageSms("saveContact", { name, phone });
+      document.getElementById("smsName").value = "";
+      document.getElementById("smsPhone").value = "";
+      smsToast("문자 수신자 저장 완료");
+      loadSmsContacts();
+    } catch(e) {
+      alert("저장 오류: " + e.message);
     }
-
-    document.getElementById("smsName").value = "";
-    document.getElementById("smsPhone").value = "";
-    smsToast("문자 수신자 저장 완료");
-    loadSmsContacts();
   };
 
   window.deleteSmsContact = async function(id){
-    if(!sbSms || !id) return;
+    if(!id) return;
     if(!confirm("이 연락처를 삭제할까요?")) return;
-    const { error } = await sbSms.from("sms_contacts").delete().eq("id", id);
-    if(error){
-      alert("삭제 오류: " + error.message);
-      return;
+
+    try {
+      await manageSms("deleteContact", { id });
+      smsToast("연락처 삭제 완료");
+      loadSmsContacts();
+    } catch(e) {
+      alert("삭제 오류: " + e.message);
     }
-    smsToast("연락처 삭제 완료");
-    loadSmsContacts();
   };
 
   function makeDueAtKst(dateStr, minusDays){
@@ -443,11 +468,6 @@ drawTabs();render();upd();
   }
 
   window.addSchedulePreset = async function(kind){
-    if(!sbSms){
-      alert("Supabase 연결을 확인해주세요.");
-      return;
-    }
-
     let title = "";
     let dueAt = "";
 
@@ -481,34 +501,40 @@ drawTabs();render();upd();
 
     const message = `[문멘토 체크리스트]\n상계2구역 ${title}\n\n확인:\nhttps://bujaju2104.github.io/checklist/sangye2-choigwan.html`;
 
-    const { error } = await sbSms.from("sms_schedules").insert({
-      page_id: PAGE_ID_SMS,
-      title,
-      message,
-      due_at: dueAt,
-      status: "예약중"
-    });
-
-    if(error){
-      alert("예약 저장 오류: " + error.message);
-      return;
+    try {
+      await manageSms("saveSchedule", { title, dueAt, message });
+      smsToast(title + " 예약 완료");
+      loadSmsSchedules();
+    } catch(e) {
+      alert("예약 저장 오류: " + e.message);
     }
-
-    smsToast(title + " 예약 완료");
-    loadSmsSchedules();
   };
 
   window.deleteSmsSchedule = async function(id){
-    if(!sbSms || !id) return;
+    if(!id) return;
     if(!confirm("이 예약 문자를 삭제할까요?")) return;
-    const { error } = await sbSms.from("sms_schedules").delete().eq("id", id);
-    if(error){
-      alert("삭제 오류: " + error.message);
-      return;
+
+    try {
+      await manageSms("deleteSchedule", { id });
+      smsToast("예약 문자 삭제 완료");
+      loadSmsSchedules();
+    } catch(e) {
+      alert("삭제 오류: " + e.message);
     }
-    smsToast("예약 문자 삭제 완료");
-    loadSmsSchedules();
   };
+
+  function getActorNameForSms(){
+    try {
+      let actor = localStorage.getItem("sg2_actor_name") || "";
+      if(!actor){
+        actor = prompt("사용자 이름을 입력해주세요. 예) 문멘토 / 최종관", "문멘토") || "문멘토";
+        localStorage.setItem("sg2_actor_name", actor);
+      }
+      return actor;
+    } catch(e) {
+      return "문멘토";
+    }
+  }
 
   async function sendChecklistSmsToAll(itemTitle, checked, force){
     try {
@@ -560,14 +586,6 @@ drawTabs();render();upd();
       sendChecklistSmsToAll(title, isDone, false);
     };
   }
-
-  function initSmsPanels(){
-    loadSmsContacts();
-    loadSmsSchedules();
-  }
-
-  document.addEventListener("DOMContentLoaded", initSmsPanels);
-  setTimeout(initSmsPanels, 700);
 })();
 </script>
 
