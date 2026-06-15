@@ -65,6 +65,90 @@ html,body{margin:0;padding:0;background:#eef1f4;font-family:-apple-system,BlinkM
 
 .modal-body input:focus,.modal-body select:focus{outline:none;border-color:#d7a640;box-shadow:0 0 0 3px rgba(215,166,64,.18)}
 
+/* NO_SCROLL_TABS_VERSION */
+
+html,body{height:100%;overflow:hidden!important}
+.app{height:100dvh;overflow:hidden!important;display:flex;flex-direction:column}
+.header{flex:0 0 auto;padding:12px 12px 10px!important}
+.home{width:36px!important;height:36px!important;min-width:36px!important;font-size:20px!important}
+.title{font-size:15px!important;line-height:1.18!important}
+.sub{font-size:10.5px!important;margin-top:2px!important}
+.chips{margin-top:8px!important;gap:6px!important}
+.chip{font-size:10.5px!important;padding:5px 8px!important}
+.main-tabs{flex:0 0 auto}
+.main-tab{font-size:11px!important;padding:7px 2px 6px!important}
+.main-tab .icon{font-size:18px!important;margin-bottom:4px!important}
+.sub-tabs{flex:0 0 auto;overflow-x:auto}
+.sub-tab{font-size:12px!important;padding:8px 4px 8px!important}
+.content{flex:1 1 auto;min-height:0;overflow:hidden!important;padding:8px 8px 0!important;display:flex;flex-direction:column}
+.stage-head{margin-bottom:4px!important;flex:0 0 auto}
+.stage-title{font-size:14px!important}
+.stage-pct{font-size:13px!important}
+.progress{height:5px!important;margin-bottom:7px!important;flex:0 0 auto}
+#screen{flex:1 1 auto;min-height:0;overflow:hidden!important;display:flex;flex-direction:column}
+.group-label{margin:7px 2px 5px!important;font-size:12px!important;flex:0 0 auto}
+.bar{height:14px!important;width:3px!important}
+.card{border-radius:12px!important;flex:0 0 auto}
+.row{padding:8px 8px!important;gap:8px!important}
+.box{width:22px!important;height:22px!important;min-width:22px!important;border-width:2.5px!important;border-radius:6px!important;font-size:13px!important}
+.main{font-size:12.5px!important;line-height:1.18!important}
+.meta{font-size:10.5px!important;line-height:1.22!important;margin-top:2px!important}
+.badge{font-size:10.5px!important;padding:3px 7px!important}
+.footer{display:none!important}
+.smsbar{position:static!important;flex:0 0 auto;padding:7px 8px 8px!important;max-width:430px;width:100%;margin:0 auto;background:#fff;border-top:1px solid #e2e7ee}
+.smsbar button{padding:10px!important;font-size:13px!important;border-radius:12px!important}
+.office{display:none!important}
+.footer-space{display:none!important}
+@media(max-height:720px){
+  .row{padding:7px 8px!important}
+  .main{font-size:12px!important}
+  .meta{font-size:10px!important}
+  .group-label{font-size:11.5px!important;margin:6px 2px 4px!important}
+}
+
+
+/* CONTACT_AND_SMS_VISIBLE_FIX */
+.content{padding-bottom:76px!important}
+.smsbar{
+  position:fixed!important;
+  left:50%!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  z-index:9999!important;
+  width:100%!important;
+  max-width:430px!important;
+  padding:7px 10px 8px!important;
+  background:#ffffff!important;
+  border-top:1px solid #dbe3ef!important;
+  box-shadow:0 -6px 18px rgba(15,23,42,.10)!important;
+  display:block!important;
+}
+.smsbar .office-contact{
+  display:block!important;
+  text-align:center!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+  color:#334155!important;
+  line-height:1.25!important;
+  margin-bottom:5px!important;
+  letter-spacing:-.03em!important;
+}
+.smsbar button{
+  display:block!important;
+  width:100%!important;
+  padding:10px 10px!important;
+  border-radius:12px!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+.footer,.office{display:none!important}
+@media(max-height:720px){
+  .content{padding-bottom:72px!important}
+  .smsbar{padding:6px 9px 7px!important}
+  .smsbar .office-contact{font-size:10px!important;margin-bottom:4px!important}
+  .smsbar button{padding:9px!important;font-size:12.5px!important}
+}
+
 </style>
 </head>
 <body>
@@ -101,7 +185,7 @@ html,body{margin:0;padding:0;background:#eef1f4;font-family:-apple-system,BlinkM
 
 
 <div class="smsbar">
-  <button onclick="openActor()">📩 체크 완료 후 문자 발송</button>
+  <button onclick="openActor()">📩 체크 후 문자전송</button>
 </div>
 
 
@@ -126,20 +210,20 @@ html,body{margin:0;padding:0;background:#eef1f4;font-family:-apple-system,BlinkM
       </select>
 
       <div style="font-size:12px;color:#6b7280;font-weight:800;line-height:1.4">
-        저장된 번호가 아니라, 지금 입력한 번호로만 발송됩니다.
+        DB 저장번호 사용 안 함 · 지금 입력한 번호로만 발송됩니다.
       </div>
 
       <button class="actor" onclick="sendSmsFromForm()" style="width:100%;font-size:15px;padding:13px;border-radius:14px">
-        입력한 번호로 문자 발송
+        입력한 번호로만 문자 발송
       </button>
       <button class="cancel" onclick="closeActor()">취소</button>
     </div>
   </div>
 </div>
 <script>
-const STORAGE_KEY='gwangmyeong_402_jeongbyeonguk_direct_sms_v1';
+const STORAGE_KEY='gwangmyeong_402_noscroll_tabs_v1';
 const PAGE_ID='gwangmyeong-prime-402-jeongbyeonguk-only';
-const SEND_SMS_URL='https://bjmanwqmoeobkpxehfpm.supabase.co/functions/v1/send-checklist-sms';
+const SEND_SMS_URL='https://bjmanwqmoeobkpxehfpm.supabase.co/functions/v1/send-gwangmyeong-402-direct-sms';
 const SUPABASE_URL='https://bjmanwqmoeobkpxehfpm.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA';
 const DATA = {
@@ -180,7 +264,9 @@ const DATA = {
           {title:'임대차계약서', meta:'임차인 있는 경우', status:'todo'},
           {title:'사업자등록증', meta:'임차인이 사업자등록 된 경우', status:'todo'},
           {title:'국세 및 지방세 완납증명서', meta:'', status:'todo'}
-        ]},
+        ]}
+      ]},
+      proxy:{label:'대리계약', groups:[
         {title:'대리 계약시 추가 서류', tone:'gray', items:[
           {title:'대리인 신분증', meta:'', status:'ref'},
           {title:'도장', meta:'', status:'ref'},
@@ -207,12 +293,14 @@ const DATA = {
   balance:{
     label:'잔금', icon:'🏠', percent:0,
     subtabs:{
-      settle:{label:'수령·정산', groups:[
+      settle:{label:'잔금수령', groups:[
         {title:'잔금 수령', tone:'green', items:[
           {title:'잔금 수령', meta:'📅 <span class="blue">2026.08.31</span> · 3억원정', status:'todo'},
           {title:'소유권이전 등기 협조', meta:'📅 잔금일', status:'todo'}
-        ]},
-        {title:'정산', tone:'purple', items:[
+        ]}
+      ]},
+      account:{label:'정산', groups:[
+        {title:'관리비/선수관리비/도시가스 정산', tone:'purple', items:[
           {title:'관리비 정산', meta:'📅 잔금일', status:'todo'},
           {title:'선수관리비 정산', meta:'📅 잔금일', status:'todo'},
           {title:'도시가스 정산', meta:'📅 잔금일', status:'todo'}
@@ -228,7 +316,9 @@ const DATA = {
           {title:'주민등록초본', meta:'과거 주소변동 전부 기재', status:'todo'},
           {title:'임대차계약서', meta:'임차인 있는 경우', status:'todo'},
           {title:'사업자등록증', meta:'임차인이 사업자등록 된 경우', status:'todo'}
-        ]},
+        ]}
+      ]},
+      proxy:{label:'대리잔금', groups:[
         {title:'대리 잔금시 추가 서류', tone:'gray', items:[
           {title:'대리인 신분증', meta:'', status:'ref'},
           {title:'위임장', meta:'인감도장 날인', status:'ref'},
@@ -368,7 +458,7 @@ async function sendSms(actor){
     if(!res.ok||data.ok===false) throw new Error(data.error||data.message||raw||'문자 발송 실패');
     pending=[];
     closeActor();
-    alert('문자 발송 완료');
+    alert('문자 발송 완료\n실제 전송번호: ' + (data.sentTo || receiverPhone));
   }catch(e){
     alert('문자 발송 오류\n'+(e.message||e));
   }
