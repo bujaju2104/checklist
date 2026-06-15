@@ -1,132 +1,552 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>광명 더프라임타워 402호 매매 체크리스트</title>
+<meta name="description" content="매도인 정병욱 · 3억 3,000만원 · 문멘토공인중개사사무소">
+<meta property="og:type" content="website">
+<meta property="og:title" content="광명 더프라임타워 402호 매매 체크리스트">
+<meta property="og:description" content="매도인 정병욱 · 3억 3,000만원 · 문멘토공인중개사사무소">
+<meta property="og:url" content="https://bujaju2104.github.io/checklist/gwangmyeong-prime-402-direct.html">
+<meta property="og:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="광명 더프라임타워 402호 매매 체크리스트">
+<meta name="twitter:description" content="매도인 정병욱 · 3억 3,000만원 · 문멘토공인중개사사무소">
+<meta name="twitter:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-512.png">
+
+<link rel="manifest" href="/checklist/manifest-gwangmyeong-prime-402.json">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:#eef1f4;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:#1f2937}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:#eef1f4}
+.header{background:linear-gradient(135deg,#118a2f,#1cb34b);color:#fff;padding:18px 14px 14px}
+.headline{display:flex;gap:12px;align-items:center}.home{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 42px}
+.title{font-size:17px;font-weight:900;line-height:1.25}.sub{font-size:12px;color:#e8ffe9;margin-top:4px;font-weight:700}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{background:rgba(255,255,255,.14);color:#f3fff3;padding:6px 11px;border-radius:999px;font-size:12px;font-weight:800}
+.main-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid #dce3ea}
+.main-tab{text-align:center;padding:10px 3px 8px;color:#9099a7;font-size:12px;font-weight:900;position:relative;cursor:pointer}.main-tab .icon{display:block;font-size:21px;line-height:1;margin-bottom:7px}.main-tab.active{color:#22a44a}.main-tab.active::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:#26a84d}
+.sub-tabs{display:grid;background:#f6f7f9;border-bottom:1px solid #dde5eb}.sub-tab{text-align:center;padding:12px 6px 11px;color:#a0a8b3;font-size:14px;font-weight:900;position:relative;cursor:pointer}.sub-tab.active{color:#22a44a}.sub-tab.active::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:#26a84d}
+.content{padding:12px 12px 46px}.stage-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.stage-title{font-size:16px;font-weight:900;color:#223047}.stage-pct{font-size:16px;font-weight:900;color:#26a84d}.progress{height:6px;background:#dbe3ea;border-radius:999px;overflow:hidden;margin-bottom:16px}.progress .fill{height:100%;background:#28a84e;border-radius:999px}
+.group-label{display:flex;align-items:center;gap:6px;margin:18px 3px 8px;font-size:14px;font-weight:900;letter-spacing:-.2px}.group-label.teal{color:#199fb4}.group-label.purple{color:#8c48d8}.group-label.orange{color:#d68909}.group-label.green{color:#18a34d}.group-label.gray{color:#9199a5}.bar{width:4px;height:18px;border-radius:999px;background:currentColor}
+.card{background:#fff;border:1px solid #dfe6ed;border-radius:16px;overflow:hidden;box-shadow:0 1px 6px rgba(31,41,55,.04)}
+.row{display:flex;gap:12px;align-items:flex-start;padding:14px 12px;border-bottom:1px solid #edf2f6;cursor:pointer}.row:last-child{border-bottom:0}.row.done{background:#eefbf1}.row.ref{background:#f8f9fb}
+.box{width:28px;height:28px;min-width:28px;border:3px solid #3477dc;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#fff;margin-top:1px}.row.done .box{background:#20ab51;border-color:#20ab51}.row.ref .box{border-color:#a8b0bb}
+.tick{display:none}.row.done .tick{display:block}.text{flex:1;min-width:0}.main{font-size:15px;font-weight:900;line-height:1.28;letter-spacing:-.3px;color:#223047}.meta{font-size:12px;font-weight:800;line-height:1.35;color:#8b96a5;margin-top:3px}.meta .blue{color:#2f66d3}.meta .red{color:#e44d4d}.meta .green{color:#18a34d}
+.badge{align-self:center;background:#e7f0ff;color:#5f7fcc;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:900;white-space:nowrap}.row.done .badge{background:#def8e7;color:#1ea24d}.row.ref .badge{background:#eef0f3;color:#8f98a6}
+.footer{padding:24px 12px 28px;text-align:center;color:#5f6a78;font-weight:800;font-size:13px;line-height:1.55}
+@media (max-width:380px){.title{font-size:16px}.main{font-size:14px}.meta{font-size:11.5px}}
+
+.smsbar{
+  position:fixed;left:0;right:0;bottom:0;max-width:430px;margin:auto;
+  background:rgba(255,255,255,.98);border-top:1px solid #e2e7ee;
+  padding:9px 12px 13px;z-index:9998
+}
+.smsbar button{
+  width:100%;border:0;border-radius:16px;background:#12254a;color:#fff;
+  font-weight:900;font-size:15px;padding:13px
+}
+.modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);
+  align-items:center;justify-content:center;z-index:10000;padding:20px
+}
+.modal-box{max-width:390px;width:100%;background:#fff;border-radius:18px;overflow:hidden}
+.modal-head{background:#12254a;color:#fff;font-weight:900;padding:15px}
+.modal-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.modal button{border:0;border-radius:10px;padding:11px;font-weight:900}
+.actor{background:#12254a;color:#fff}
+.cancel{background:#f1f3f6;color:#374151}
+.content{padding-bottom:112px !important}
+
+
+.modal-body input:focus,.modal-body select:focus{outline:none;border-color:#d7a640;box-shadow:0 0 0 3px rgba(215,166,64,.18)}
+
+/* NO_SCROLL_TABS_VERSION */
+
+html,body{height:100%;overflow:hidden!important}
+.app{height:100dvh;overflow:hidden!important;display:flex;flex-direction:column}
+.header{flex:0 0 auto;padding:12px 12px 10px!important}
+.home{width:36px!important;height:36px!important;min-width:36px!important;font-size:20px!important}
+.title{font-size:15px!important;line-height:1.18!important}
+.sub{font-size:10.5px!important;margin-top:2px!important}
+.chips{margin-top:8px!important;gap:6px!important}
+.chip{font-size:10.5px!important;padding:5px 8px!important}
+.main-tabs{flex:0 0 auto}
+.main-tab{font-size:11px!important;padding:7px 2px 6px!important}
+.main-tab .icon{font-size:18px!important;margin-bottom:4px!important}
+.sub-tabs{flex:0 0 auto;overflow-x:auto}
+.sub-tab{font-size:12px!important;padding:8px 4px 8px!important}
+.content{flex:1 1 auto;min-height:0;overflow:hidden!important;padding:8px 8px 0!important;display:flex;flex-direction:column}
+.stage-head{margin-bottom:4px!important;flex:0 0 auto}
+.stage-title{font-size:14px!important}
+.stage-pct{font-size:13px!important}
+.progress{height:5px!important;margin-bottom:7px!important;flex:0 0 auto}
+#screen{flex:1 1 auto;min-height:0;overflow:hidden!important;display:flex;flex-direction:column}
+.group-label{margin:7px 2px 5px!important;font-size:12px!important;flex:0 0 auto}
+.bar{height:14px!important;width:3px!important}
+.card{border-radius:12px!important;flex:0 0 auto}
+.row{padding:8px 8px!important;gap:8px!important}
+.box{width:22px!important;height:22px!important;min-width:22px!important;border-width:2.5px!important;border-radius:6px!important;font-size:13px!important}
+.main{font-size:12.5px!important;line-height:1.18!important}
+.meta{font-size:10.5px!important;line-height:1.22!important;margin-top:2px!important}
+.badge{font-size:10.5px!important;padding:3px 7px!important}
+.footer{display:none!important}
+.smsbar{position:static!important;flex:0 0 auto;padding:7px 8px 8px!important;max-width:430px;width:100%;margin:0 auto;background:#fff;border-top:1px solid #e2e7ee}
+.smsbar button{padding:10px!important;font-size:13px!important;border-radius:12px!important}
+.office{display:none!important}
+.footer-space{display:none!important}
+@media(max-height:720px){
+  .row{padding:7px 8px!important}
+  .main{font-size:12px!important}
+  .meta{font-size:10px!important}
+  .group-label{font-size:11.5px!important;margin:6px 2px 4px!important}
+}
+
+
+/* CONTACT_AND_SMS_VISIBLE_FIX */
+.content{padding-bottom:76px!important}
+.smsbar{
+  position:fixed!important;
+  left:50%!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  z-index:9999!important;
+  width:100%!important;
+  max-width:430px!important;
+  padding:7px 10px 8px!important;
+  background:#ffffff!important;
+  border-top:1px solid #dbe3ef!important;
+  box-shadow:0 -6px 18px rgba(15,23,42,.10)!important;
+  display:block!important;
+}
+.smsbar .office-contact{
+  display:block!important;
+  text-align:center!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+  color:#334155!important;
+  line-height:1.25!important;
+  margin-bottom:5px!important;
+  letter-spacing:-.03em!important;
+}
+.smsbar button{
+  display:block!important;
+  width:100%!important;
+  padding:10px 10px!important;
+  border-radius:12px!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+.footer,.office{display:none!important}
+@media(max-height:720px){
+  .content{padding-bottom:72px!important}
+  .smsbar{padding:6px 9px 7px!important}
+  .smsbar .office-contact{font-size:10px!important;margin-bottom:4px!important}
+  .smsbar button{padding:9px!important;font-size:12.5px!important}
+}
+
+
+.direct-only-notice{
+  background:#fff4e5!important;
+  color:#9a3412!important;
+  border:1px solid #fdba74!important;
+  font-size:11px!important;
+  font-weight:900!important;
+  text-align:center!important;
+  padding:6px 8px!important;
+  letter-spacing:-.04em!important;
+}
+
+</style>
+
+<script>/* DELETE_OLD_SERVICE_WORKER_CACHE */
+(async function(){
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs){ await r.unregister(); }
+    }
+    if(window.caches){
+      const keys = await caches.keys();
+      for(const k of keys){ await caches.delete(k); }
+    }
+  }catch(e){}
+})();
+</script>
+
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="headline">
+      <div class="home">🏢</div>
+      <div>
+        <div class="title">광명 더프라임타워 402호</div>
+        <div class="sub">경기도 광명시 광명동 102-1 외 1필지 · 오피스텔 매도인</div>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip">💵 3억 3,000만원</div>
+      <div class="chip">👥 매도인 정병욱</div>
+      <div class="chip">✅ 실시간 연동</div>
+    </div>
+  </div>
+
+  <div class="direct-only-notice">DB 저장번호 차단 · 지금 입력한 휴대폰번호 1명에게만 문자 발송</div>
+<div class="main-tabs" id="mainTabs"></div>
+  <div class="sub-tabs" id="subTabs"></div>
+
+  <div class="content">
+    <div class="stage-head">
+      <div class="stage-title" id="stageTitle"></div>
+      <div class="stage-pct" id="stagePct"></div>
+    </div>
+    <div class="progress"><div class="fill" id="stageFill"></div></div>
+    <div id="screen"></div>
+  </div>
+
+  <div class="footer">문멘토공인중개사사무소<br>☎ 010.6336.1828 | 010.4336.5038</div>
+</div>
+
+
+<div class="smsbar">
+  <button onclick="openActor()">📩 체크 후 문자전송</button>
+</div>
+
+
+
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">문자 발송 확인</div>
+    <div class="modal-body">
+      <div style="font-size:13px;font-weight:900;color:#1f2937;line-height:1.45">
+        손님이 매번 바뀌어도 안전하게 보내도록<br>
+        <b>수신자명과 휴대폰번호를 직접 입력</b>한 뒤 발송합니다.
+      </div>
+
+      <input id="smsName" placeholder="수신자명 예: 정병욱" value="정병욱" style="width:100%;border:1px solid #d8dee8;border-radius:12px;padding:12px;font-size:15px;font-weight:800">
+
+      <input id="smsPhone" placeholder="수신자 휴대폰번호 예: 01012345678" inputmode="numeric" style="width:100%;border:1px solid #d8dee8;border-radius:12px;padding:12px;font-size:15px;font-weight:800">
+
+      <select id="smsActor" style="width:100%;border:1px solid #d8dee8;border-radius:12px;padding:12px;font-size:15px;font-weight:900;background:#fff;color:#1f2937">
+        <option value="손윤주">담당자: 손윤주</option>
+        <option value="문멘토">담당자: 문멘토</option>
+      </select>
+
+      <div style="font-size:12px;color:#6b7280;font-weight:800;line-height:1.4">
+        DB 저장번호 사용 안 함 · 지금 입력한 번호로만 발송됩니다.
+      </div>
+
+      <button class="actor" onclick="sendSmsFromForm()" style="width:100%;font-size:15px;padding:13px;border-radius:14px">
+        입력한 번호로만 문자 발송
+      </button>
+      <button class="cancel" onclick="closeActor()">취소</button>
+    </div>
+  </div>
+</div>
+<script>
+const STORAGE_KEY='gwangmyeong_402_noscroll_tabs_v1';
+const PAGE_ID='gwangmyeong-prime-402-jeongbyeonguk-only';
+const SEND_SMS_URL='https://bjmanwqmoeobkpxehfpm.supabase.co/functions/v1/send-gwangmyeong-402-direct-sms';
+const SUPABASE_URL='https://bjmanwqmoeobkpxehfpm.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqbWFud3Ftb2VvYmtweGVoZnBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTkxNzEsImV4cCI6MjA5NDI3NTE3MX0.WwsdEiwO_uGV44v7bAq5twKbRdYlComsUb7yJIYW7BA';
+const DATA = {
+  deposit:{
+    label:'가계약', icon:'🤝', percent:100,
+    subtabs:{
+      only:{label:'가계약', groups:[
+        {title:'가계약 진행', tone:'green', items:[
+          {title:'가계약 조건 문자 발송', meta:'📅 <span class="green">2026.06.11</span> 매도인·매수인 동시 발송', status:'done'},
+          {title:'가계약금 수령', meta:'📅 <span class="green">2026.06.11</span> 1,000만원 · 국민은행 94949158055 정병욱', status:'done'},
+          {title:'매도인 동의 문자 회신', meta:'📅 <span class="green">2026.06.11</span> “동의합니다” 회신 확인', status:'done'}
+        ]}
+      ]}
+    }
+  },
+  contract:{
+    label:'계약', icon:'📝', percent:58,
+    subtabs:{
+      conclude:{label:'체결', groups:[
+        {title:'계약 체결', tone:'purple', items:[
+          {title:'정식 계약 체결', meta:'📅 2026.06.17 수요일 저녁 7시 · 매도인 정병욱', status:'done'},
+          {title:'계약금 수령', meta:'📅 계약금 3,000만원 · 계약금 일부 1,000만원 포함', status:'done'},
+          {title:'계약서 원본 보관', meta:'📅 2026.06.17 수요일 저녁 7시', status:'done'}
+        ]}
+      ]},
+      report:{label:'거래신고', groups:[
+        {title:'부동산거래신고 — 계약 후 30일 이내', tone:'teal', items:[
+          {title:'부동산거래신고 접수', meta:'📅 <span class="red">계약 체결일 기준 30일 이내</span>', status:'todo'},
+          {title:'매매계약서 제출', meta:'📅 <span class="blue">계약 후 30일 이내</span>', status:'todo'}
+        ]}
+      ]},
+      docs:{label:'서류', groups:[
+        {title:'계약일 필요서류', tone:'teal', items:[
+          {title:'도장', meta:'', status:'done'},
+          {title:'신분증', meta:'', status:'done'},
+          {title:'등기필증', meta:'', status:'done'},
+          {title:'통장사본 or 계좌번호', meta:'국민은행 94949158055 정병욱', status:'done'},
+          {title:'임대차계약서', meta:'임차인 있는 경우', status:'todo'},
+          {title:'사업자등록증', meta:'임차인이 사업자등록 된 경우', status:'todo'},
+          {title:'국세 및 지방세 완납증명서', meta:'', status:'todo'}
+        ]}
+      ]},
+      proxy:{label:'대리계약', groups:[
+        {title:'대리 계약시 추가 서류', tone:'gray', items:[
+          {title:'대리인 신분증', meta:'', status:'ref'},
+          {title:'도장', meta:'', status:'ref'},
+          {title:'위임인 위임장', meta:'인감도장 날인', status:'ref'},
+          {title:'신분증', meta:'', status:'ref'},
+          {title:'인감증명서', meta:'', status:'ref'}
+        ]}
+      ]}
+    }
+  },
+  middle:{
+    label:'중도금', icon:'💰', percent:0,
+    subtabs:{
+      only:{label:'중도금', groups:[
+        {title:'중도금 수령', tone:'teal', items:[
+          {title:'중도금 수령', meta:'본 건은 중도금 없이 계약금 일부 및 잔금 일정으로 진행', status:'todo'}
+        ]},
+        {title:'중도금 이후 주의사항', tone:'orange', items:[
+          {title:'중도금 이후 주의사항', meta:'추가 대출 · 저당권 설정 금지', status:'todo'}
+        ]}
+      ]}
+    }
+  },
+  balance:{
+    label:'잔금', icon:'🏠', percent:0,
+    subtabs:{
+      settle:{label:'잔금수령', groups:[
+        {title:'잔금 수령', tone:'green', items:[
+          {title:'잔금 수령', meta:'📅 <span class="blue">2026.08.31</span> · 3억원정', status:'todo'},
+          {title:'소유권이전 등기 협조', meta:'📅 잔금일', status:'todo'}
+        ]}
+      ]},
+      account:{label:'정산', groups:[
+        {title:'관리비/선수관리비/도시가스 정산', tone:'purple', items:[
+          {title:'관리비 정산', meta:'📅 잔금일', status:'todo'},
+          {title:'선수관리비 정산', meta:'📅 잔금일', status:'todo'},
+          {title:'도시가스 정산', meta:'📅 잔금일', status:'todo'}
+        ]}
+      ]},
+      docs:{label:'서류', groups:[
+        {title:'잔금일 필요서류', tone:'teal', items:[
+          {title:'도장', meta:'', status:'todo'},
+          {title:'신분증', meta:'', status:'todo'},
+          {title:'등기필증', meta:'', status:'todo'},
+          {title:'부동산 매도용 인감증명서', meta:'매수인 인적사항 기재', status:'todo'},
+          {title:'인감도장', meta:'', status:'todo'},
+          {title:'주민등록초본', meta:'과거 주소변동 전부 기재', status:'todo'},
+          {title:'임대차계약서', meta:'임차인 있는 경우', status:'todo'},
+          {title:'사업자등록증', meta:'임차인이 사업자등록 된 경우', status:'todo'}
+        ]}
+      ]},
+      proxy:{label:'대리잔금', groups:[
+        {title:'대리 잔금시 추가 서류', tone:'gray', items:[
+          {title:'대리인 신분증', meta:'', status:'ref'},
+          {title:'위임장', meta:'인감도장 날인', status:'ref'},
+          {title:'인감증명서', meta:'', status:'ref'}
+        ]}
+      ]},
+      item:{label:'물품인계', groups:[
+        {title:'물품 인계', tone:'teal', items:[
+          {title:'물품인계서 작성 및 서명', meta:'', status:'todo'},
+          {title:'열쇠·카드 인계', meta:'', status:'todo'},
+          {title:'공동현관 비밀번호', meta:'', status:'todo'},
+          {title:'세대현관 비밀번호', meta:'', status:'todo'}
+        ]}
+      ]}
+    }
+  }
 };
-
-function onlyNumber(v: unknown) {
-  return String(v ?? "").replace(/[^0-9]/g, "");
+let state = loadState();
+let currentMain='deposit';
+let currentSub='only';
+let pending=[];
+let sb=null;
+let pushTimer=null;
+let localStamp=0;
+function loadState(){const raw=localStorage.getItem(STORAGE_KEY);if(raw){try{return JSON.parse(raw)}catch(e){}}const init={};Object.entries(DATA).forEach(([mk,mv])=>{Object.entries(mv.subtabs).forEach(([sk,sv])=>{sv.groups.forEach((g,gi)=>{g.items.forEach((it,ii)=>{init[keyOf(mk,sk,gi,ii)] = (it.status==='done');});});});});return init;}
+function saveState(){
+  state.__updated_at=new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  pushRemoteSoon();
 }
-
-function pickDirectPhone(body: any) {
-  // DB/저장번호/CONTACT_PHONES 절대 사용 안 함
-  return onlyNumber(
-    body?.recipientPhone ||
-    body?.phone ||
-    body?.to ||
-    body?.receiverPhone ||
-    body?.directPhone
-  );
+function keyOf(m,s,g,i){return `${m}__${s}__${g}__${i}`;}
+function toggle(m,s,g,i,status){
+  if(status==='ref') return;
+  const key = keyOf(m,s,g,i);
+  state[key]=!state[key];
+  const label=findItemLabel(m,s,g,i);
+  pending=pending.filter(x=>x.key!==key);
+  pending.push({key:key,label:label,status:state[key]?'체크':'해제'});
+  localStamp=Date.now();
+  saveState();
+  render();
 }
-
-function cleanSummary(raw: string) {
-  return String(raw || "")
-    // 요청에 따라 문자 상단 중복 문구 삭제
-    .replace(/^\s*\[?광명\s*더프라임타워\s*402호\s*매매\s*체크리스트\]?\s*\n?/gm, "")
-    .replace(/^\s*수신자\s*:\s*.*\n?/gm, "")
-    .replace(/^\s*입력번호\s*:\s*.*\n?/gm, "")
-    .replace(/^\s*담당자\s*:\s*.*\n?/gm, "")
-    .replace(/^\s*물건\s*:\s*.*\n?/gm, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-async function hmacSha256Hex(secret: string, message: string) {
-  const encoder = new TextEncoder();
-
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(message));
-
-  return Array.from(new Uint8Array(signature))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
-
-  try {
-    const apiKey = Deno.env.get("SOLAPI_API_KEY") || "";
-    const apiSecret = Deno.env.get("SOLAPI_API_SECRET") || "";
-    const from = onlyNumber(Deno.env.get("SOLAPI_FROM") || "");
-
-    if (!apiKey) throw new Error("SOLAPI_API_KEY Secret이 없습니다.");
-    if (!apiSecret) throw new Error("SOLAPI_API_SECRET Secret이 없습니다.");
-    if (!from) throw new Error("SOLAPI_FROM Secret이 없습니다.");
-
-    const body = await req.json().catch(() => ({}));
-
-    const directPhone = pickDirectPhone(body);
-    const summaryText = cleanSummary(String(body?.summaryText || ""));
-
-    if (directPhone.length < 10) {
-      throw new Error("입력한 휴대폰번호가 없습니다. 이 함수는 DB 저장번호를 사용하지 않습니다.");
-    }
-
-    if (!summaryText) {
-      throw new Error("문자로 보낼 체크 항목이 없습니다.");
-    }
-
-    // 문자에는 체크 내용 + 사무소 연락처만 남김
-    const text =
-`${summaryText}
-
-문멘토공인중개사사무소
-010.6336.1828 / 010.4336.5038`;
-
-    const dateTime = new Date().toISOString();
-    const salt = crypto.randomUUID().replace(/-/g, "");
-    const signature = await hmacSha256Hex(apiSecret, dateTime + salt);
-
-    const authHeader =
-      `HMAC-SHA256 apiKey=${apiKey}, date=${dateTime}, salt=${salt}, signature=${signature}`;
-
-    const solapiRes = await fetch("https://api.solapi.com/messages/v4/send-many/detail", {
-      method: "POST",
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: [
-          {
-            type: "LMS",
-            from,
-            to: directPhone,
-            text,
-          },
-        ],
-      }),
+function checked(m,s,g,i){return !!state[keyOf(m,s,g,i)];}
+function renderTabs(){const mainWrap=document.getElementById('mainTabs');mainWrap.innerHTML='';Object.entries(DATA).forEach(([key,val])=>{const el=document.createElement('div');el.className='main-tab'+(currentMain===key?' active':'');el.innerHTML=`<span class="icon">${val.icon}</span>${val.label}`;el.onclick=()=>{currentMain=key; currentSub=Object.keys(DATA[key].subtabs)[0]; render();};mainWrap.appendChild(el);});const subWrap=document.getElementById('subTabs');subWrap.innerHTML='';const subs=DATA[currentMain].subtabs;const subKeys=Object.keys(subs);subWrap.style.gridTemplateColumns=`repeat(${subKeys.length},1fr)`;subKeys.forEach(sk=>{const el=document.createElement('div');el.className='sub-tab'+(currentSub===sk?' active':'');el.textContent=subs[sk].label;el.onclick=()=>{currentSub=sk; render();};subWrap.appendChild(el);});}
+function stagePercent(mainKey){
+  let total=0, done=0;
+  const stage=DATA[mainKey];
+  Object.entries(stage.subtabs).forEach(([subKey,subVal])=>{
+    subVal.groups.forEach((group,gi)=>{
+      group.items.forEach((item,ii)=>{
+        if(item.status==='ref') return;
+        total++;
+        if(checked(mainKey,subKey,gi,ii)) done++;
+      });
     });
+  });
+  return total ? Math.round(done/total*100) : 0;
+}
+function renderStage(){
+  const stage=DATA[currentMain];
+  const pct=stagePercent(currentMain);
+  document.getElementById('stageTitle').textContent=`${stage.icon} ${stage.label}`;
+  document.getElementById('stagePct').textContent=`${pct}%`;
+  document.getElementById('stageFill').style.width=`${pct}%`;
+}
+function renderScreen(){const target=document.getElementById('screen');target.innerHTML='';const section=DATA[currentMain].subtabs[currentSub];section.groups.forEach((group,gi)=>{const lab=document.createElement('div');lab.className='group-label '+(group.tone||'teal');lab.innerHTML=`<span class="bar"></span>${group.title}`;target.appendChild(lab);const card=document.createElement('div');card.className='card';group.items.forEach((it,ii)=>{const isRef=it.status==='ref';const isDone=isRef?false:checked(currentMain,currentSub,gi,ii);const row=document.createElement('div');row.className='row'+(isDone?' done':'')+(isRef?' ref':'');row.onclick=()=>toggle(currentMain,currentSub,gi,ii,it.status);row.innerHTML=`<div class="box"><span class="tick">✓</span></div><div class="text"><div class="main">${it.title}</div>${it.meta?`<div class="meta">${it.meta}</div>`:''}</div><div class="badge">${isRef?'참고':(isDone?'완료':'예정')}</div>`;card.appendChild(row);});target.appendChild(card);});}
 
-    const resultText = await solapiRes.text();
+function findItemLabel(m,s,g,i){
+  try{
+    const item=DATA[m].subtabs[s].groups[g].items[i];
+    return item.title + (item.meta ? ' - ' + item.meta.replace(/<[^>]*>/g,'').trim() : '');
+  }catch(e){return '항목'}
+}
+function openActor(){
+  const el=document.getElementById('modal');
+  if(el) el.style.display='flex';
+}
+function closeActor(){
+  const el=document.getElementById('modal');
+  if(el) el.style.display='none';
+}
 
-    if (!solapiRes.ok) {
-      throw new Error(`Solapi 실패 ${solapiRes.status}: ${resultText}`);
-    }
+function sendSmsFromForm(){
+  const actorEl=document.getElementById('smsActor');
+  const actor=actorEl&&actorEl.value?actorEl.value:'손윤주';
+  sendSms(actor);
+}
 
-    return new Response(
-      JSON.stringify({
-        ok: true,
-        sentTo: directPhone,
-        usedDirectPhoneOnly: true,
-        solapi: resultText,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
-  } catch (e) {
-    return new Response(
-      JSON.stringify({ ok: false, error: String(e?.message || e) }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+async function sendSms(actor){
+  if(!pending.length){
+    alert('이번에 체크하거나 해제한 항목이 없습니다.');
+    return;
   }
-});
+
+  const nameEl=document.getElementById('smsName');
+  const phoneEl=document.getElementById('smsPhone');
+  const receiverName=(nameEl&&nameEl.value?nameEl.value.trim():'정병욱');
+  const receiverPhone=(phoneEl&&phoneEl.value?phoneEl.value.replace(/[^0-9]/g,''):'').trim();
+
+  if(!receiverPhone){
+    alert('수신자 휴대폰번호를 입력해야 문자 발송됩니다.');
+    return;
+  }
+  if(receiverPhone.length<10){
+    alert('휴대폰번호를 다시 확인해 주세요.');
+    return;
+  }
+
+  const summary='[광명 더프라임타워 402호 매매 체크리스트]\n'
+    +'수신자: '+receiverName+'\n'
+    +'물건: 경기도 광명시 광명동 102-1 외 1필지 더프라임타워 402호\n\n'
+    +'[이번 변경 항목]\n'
+    +pending.map(x=>x.status+': '+x.label).join('\n');
+
+  if(!confirm('수신자: '+receiverName+'\n번호: '+receiverPhone+'\n처리자: '+actor+'\n\n변경 '+pending.length+'개 항목을 문자 발송합니다.')) return;
+
+  try{
+    const res=await fetch(SEND_SMS_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        pageId:PAGE_ID,
+        actor:actor,
+        recipientName:receiverName,
+        recipientLabel:receiverName,
+        to:receiverPhone,
+        phone:receiverPhone,
+        recipientPhone:receiverPhone,
+        summaryText:summary,
+        pageTitle:'광명 더프라임타워 402호 매매 체크리스트',
+        pageUrl:'https://bujaju2104.github.io/checklist/gwangmyeong-prime-402-direct.html'
+      })
+    });
+    const raw=await res.text();
+    let data={};
+    try{data=raw?JSON.parse(raw):{};}catch(e){data={raw};}
+    if(!res.ok||data.ok===false) throw new Error(data.error||data.message||raw||'문자 발송 실패');
+    pending=[];
+    closeActor();
+    alert('문자 발송 완료\n실제 전송번호: ' + (data.sentTo || receiverPhone));
+  }catch(e){
+    alert('문자 발송 오류\n'+(e.message||e));
+  }
+}
+async function initRemote(){
+  try{
+    if(!window.supabase) return;
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const {data,error}=await sb.from('checklist_pages').select('*').eq('page_id',PAGE_ID).maybeSingle();
+    if(!error && data && data.data){
+      const remote=data.data;
+      const rt=remote.__updated_at?Date.parse(remote.__updated_at):0;
+      const lt=state.__updated_at?Date.parse(state.__updated_at):0;
+      if(rt>lt){
+        state=remote;
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+        render();
+      }
+    }else{
+      pushRemoteSoon();
+    }
+    sb.channel('gm402_officetel_realtime')
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'checklist_pages',filter:'page_id=eq.'+PAGE_ID},payload=>{
+        const remote=payload.new && payload.new.data;
+        if(!remote) return;
+        if(Date.now()-localStamp<1500) return;
+        const rt=remote.__updated_at?Date.parse(remote.__updated_at):0;
+        const lt=state.__updated_at?Date.parse(state.__updated_at):0;
+        if(rt>lt){
+          state=remote;
+          localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+          render();
+        }
+      }).subscribe();
+  }catch(e){
+    console.log('DB 연결 오류',e);
+  }
+}
+function pushRemoteSoon(){
+  if(pushTimer) clearTimeout(pushTimer);
+  pushTimer=setTimeout(pushRemote,500);
+}
+async function pushRemote(){
+  try{
+    if(!sb) return;
+    await sb.from('checklist_pages').upsert({
+      page_id:PAGE_ID,
+      data:state,
+      updated_at:new Date().toISOString()
+    });
+  }catch(e){
+    console.log('DB 저장 오류',e);
+  }
+}
+
+function render(){renderTabs();renderStage();renderScreen();}
+render();
+initRemote();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/checklist/sw-gwangmyeong-prime-402.js').catch(()=>{});}
+</script>
+</body>
+</html>
