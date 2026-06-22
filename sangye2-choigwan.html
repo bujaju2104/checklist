@@ -113,26 +113,28 @@ html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!impo
 <!-- MEMO_ONLY_TAB_ACTUALLY_ADDED_FINAL -->
 
 <link rel="manifest" href="/checklist/manifest-sangye2-all.json">
-<link rel="icon" href="/checklist/icon-sangye2-all-192.png">
-<link rel="apple-touch-icon" href="/checklist/icon-sangye2-all-192.png">
+<link rel="icon" href="/checklist/icon-gwangmyeong-192.png">
+<link rel="apple-touch-icon" href="/checklist/icon-gwangmyeong-192.png">
 <meta name="theme-color" content="#1a2744">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta property="og:type" content="website">
 <meta property="og:title" content="상계뉴타운 2구역 매매 체크리스트">
 <meta property="og:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
-<meta property="og:url" content="https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final">
-<meta property="og:image" content="https://bujaju2104.github.io/checklist/og-sangye2-all.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4">
+<meta property="og:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-192.png">
+<meta property="og:image:width" content="192">
+<meta property="og:image:height" content="192">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="상계뉴타운 2구역 매매 체크리스트">
 <meta name="twitter:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
-<meta name="twitter:image" content="https://bujaju2104.github.io/checklist/og-sangye2-all.png">
+<meta name="twitter:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-192.png">
 <!-- FINAL_ALL_IN_ONE_OG_SMS_PWA -->
 
 
 <!-- DELEGATOR_ID_TEXT_FIXED -->
+
+<!-- USE_EXISTING_GWANGMYEONG_ICON_FOR_PREVIEW -->
 </head>
 <body>
 <div class="app">
@@ -291,7 +293,7 @@ function buildDirectSummary(){
   }
 
   text += '\\n\\n앱 확인:\\n';
-  text += 'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final';
+  text += 'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4';
   return text;
 }
 async function sendDirectSms(){
@@ -311,7 +313,7 @@ async function sendDirectSms(){
         to:phone,
         actor:actor,
         summaryText:buildDirectSummary(),
-        pageUrl:'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final'
+        pageUrl:'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4'
       })
     });
     const data = await res.json().catch(function(){ return {}; });
