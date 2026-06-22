@@ -121,20 +121,22 @@ html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!impo
 <meta property="og:type" content="website">
 <meta property="og:title" content="상계뉴타운 2구역 매매 체크리스트">
 <meta property="og:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
-<meta property="og:url" content="https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4">
-<meta property="og:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-192.png">
-<meta property="og:image:width" content="192">
-<meta property="og:image:height" content="192">
+<meta property="og:url" content="https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final5">
+<meta property="og:image" content="https://bujaju2104.github.io/checklist/og-sangye2-preview-final.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="상계뉴타운 2구역 매매 체크리스트">
 <meta name="twitter:description" content="최종관님 · 4억 500만원 · 문멘토공인중개사사무소">
-<meta name="twitter:image" content="https://bujaju2104.github.io/checklist/icon-gwangmyeong-192.png">
+<meta name="twitter:image" content="https://bujaju2104.github.io/checklist/og-sangye2-preview-final.png">
 <!-- FINAL_ALL_IN_ONE_OG_SMS_PWA -->
 
 
 <!-- DELEGATOR_ID_TEXT_FIXED -->
 
 <!-- USE_EXISTING_GWANGMYEONG_ICON_FOR_PREVIEW -->
+
+<!-- OG_PREVIEW_FINAL_IMAGE_FIX -->
 </head>
 <body>
 <div class="app">
@@ -293,7 +295,7 @@ function buildDirectSummary(){
   }
 
   text += '\\n\\n앱 확인:\\n';
-  text += 'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4';
+  text += 'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final5';
   return text;
 }
 async function sendDirectSms(){
@@ -313,7 +315,7 @@ async function sendDirectSms(){
         to:phone,
         actor:actor,
         summaryText:buildDirectSummary(),
-        pageUrl:'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final4'
+        pageUrl:'https://bujaju2104.github.io/checklist/sangye2-choigwan.html?v=final5'
       })
     });
     const data = await res.json().catch(function(){ return {}; });

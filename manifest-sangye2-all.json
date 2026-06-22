@@ -2,7 +2,7 @@
   "name": "상계뉴타운 2구역 매매 체크리스트",
   "short_name": "상계2 체크",
   "description": "상계뉴타운 2구역 매매 진행 체크리스트",
-  "start_url": "/checklist/sangye2-choigwan.html?v=final4",
+  "start_url": "/checklist/sangye2-choigwan.html?v=final5",
   "scope": "/checklist/",
   "display": "standalone",
   "background_color": "#f5f4f0",
