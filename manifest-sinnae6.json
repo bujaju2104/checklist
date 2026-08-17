@@ -1,8 +1,10 @@
 {
+  "id": "/checklist/sinnae6-checklist.html",
   "name": "신내6단지 매매 체크리스트",
   "short_name": "신내6 체크",
-  "start_url": "./sinnae6-checklist.html?pwa-final",
-  "scope": "./",
+  "description": "문멘토공인중개사사무소 신내6단지 매매 체크리스트",
+  "start_url": "./sinnae6-checklist.html?sinnae6-app-v2",
+  "scope": "/checklist/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
