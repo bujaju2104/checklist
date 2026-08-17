@@ -1,8 +1,7 @@
 {
   "name": "신내6단지 매매 체크리스트",
   "short_name": "신내6 체크",
-  "description": "문멘토공인중개사사무소 신내6단지 매매 체크리스트",
-  "start_url": "./sinnae6-checklist.html?old-icon",
+  "start_url": "./sinnae6-checklist.html?pwa-final",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
